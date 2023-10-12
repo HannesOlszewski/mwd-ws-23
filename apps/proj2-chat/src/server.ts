@@ -2,6 +2,7 @@ import http from "node:http";
 import readline from "node:readline";
 import WebSocket from "ws";
 
+// TODO: extract to readlineUtils.ts
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -15,19 +16,22 @@ rl.on("SIGINT", () => {
 
 const PORT = process.env.PORT ?? 8080;
 
+// TODO: extract to authUtils.ts
 // Super safe way to store user data. Maps usernames to plain text passwords. :)
 const users: Record<string, string> = {
   admin: "admin",
   user: "user",
 };
 
+// TODO: extract to types.ts
 interface LoginData {
   username: string;
   password: string;
 }
 
+// TODO: extract to httpUtils.ts
 async function parseRequestDataAsJson<T extends object>(
-  req: http.IncomingMessage
+  req: http.IncomingMessage,
 ): Promise<T> {
   if (req.method !== "POST") {
     throw new Error("Invalid request method");
@@ -56,9 +60,10 @@ async function parseRequestDataAsJson<T extends object>(
   return JSON.parse(body) as T;
 }
 
+// TODO: extract to authUtils.ts
 async function handleLogin(
   req: http.IncomingMessage,
-  res: http.ServerResponse
+  res: http.ServerResponse,
 ): Promise<void> {
   const data = await parseRequestDataAsJson<LoginData>(req);
 
@@ -93,18 +98,22 @@ const server = http.createServer((req, res) => {
 
 const wss = new WebSocket.Server({ noServer: true, path: "/chat" });
 
+// TODO: extract to types.ts
 interface ChatConnection {
   username: string;
   websocket: WebSocket;
 }
 
+// TODO: extract to types.ts
 export interface Message {
   from?: string;
   message: string;
 }
 
+// TODO: extract to chatUtils.ts
 let connections: ChatConnection[] = [];
 
+// TODO: extract to chatUtils.ts
 function broadcast(message: Message, clientsToIgnore: WebSocket[] = []): void {
   connections.forEach(({ websocket }) => {
     if (
@@ -144,12 +153,13 @@ wss.on(
       broadcast({ message: `${client} left the chat` });
       connections = connections.filter((c) => c.websocket !== ws);
     });
-  }
+  },
 );
 
+// TODO: extract to authUtils.ts
 function authenticate(
   request: http.IncomingMessage,
-  callback: (err: Error | null, client?: string) => void
+  callback: (err: Error | null, client?: string) => void,
 ): void {
   if (!request.url) {
     callback(new Error("Missing token"));
@@ -167,6 +177,7 @@ function authenticate(
   }
 }
 
+// TODO: extract to authUtils.ts
 server.on("upgrade", function upgrade(request, socket, head) {
   socket.on("error", console.error);
 

@@ -9,6 +9,7 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
+// TODO: extract to readlineUtils.ts
 process.stdin.on("keypress", () => {
   if (muteStdOut) {
     const len = rl.line.length;
@@ -29,6 +30,7 @@ const USE_TLS = process.env.USE_TLS === "true";
 const SERVER_URL = `http${USE_TLS ? "s" : ""}://${SERVER_HOST}:${SERVER_PORT}`;
 const CHAT_URL = `ws${USE_TLS ? "s" : ""}://${SERVER_HOST}:${SERVER_PORT}/chat`;
 
+// TODO: extract to authUtils.ts
 rl.question("Username: ", (username) => {
   muteStdOut = true;
   rl.question("Password: ", (password) => {
@@ -45,10 +47,12 @@ rl.question("Username: ", (username) => {
   });
 });
 
+// TODO: extract to types.ts
 interface LoginResponse {
   token: string;
 }
 
+// TODO: extract to httpUtils.ts
 async function login(username: string, password: string): Promise<string> {
   const response = await fetch(`${SERVER_URL}/login`, {
     method: "POST",
