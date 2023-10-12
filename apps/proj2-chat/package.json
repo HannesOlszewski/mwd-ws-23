@@ -4,10 +4,10 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "server:dev": "ts-node src/server.ts",
-    "server:prod": "node dist/server.js",
-    "client:dev": "ts-node src/client.ts",
-    "client:prod": "node dist/client.js",
+    "server:dev": "ts-node src/server/server.ts",
+    "server:prod": "node dist/server/server.js",
+    "client:dev": "ts-node src/client/client.ts",
+    "client:prod": "node dist/client/client.js",
     "build": "tsc",
     "lint": "tsc --noEmit && eslint 'src/**/*.ts' && prettier --check 'src/**/*.ts'",
     "format": "eslint 'src/**/*.ts' --fix && prettier --write 'src/**/*.ts'"
