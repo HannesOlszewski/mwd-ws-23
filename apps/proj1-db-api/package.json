@@ -1,0 +1,27 @@
+{
+  "name": "proj1-db-api",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "prod": "node dist/index.js",
+    "build": "tsc",
+    "lint": "tsc --noEmit && eslint 'src/**/*.ts' && prettier --check 'src/**/*.ts'",
+    "format": "eslint 'src/**/*.ts' --fix && prettier --write 'src/**/*.ts'"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^17.0.45",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
+    "eslint": "^8.48.0",
+    "eslint-config-custom": "workspace:*",
+    "eslint-config-prettier": "^9.0.0",
+    "prettier": "^3.0.3",
+    "ts-node": "^10.9.1",
+    "tsconfig": "workspace:*",
+    "typescript": "^4.9.5"
+  }
+}
