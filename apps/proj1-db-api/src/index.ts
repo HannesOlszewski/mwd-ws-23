@@ -1,4 +1,8 @@
-console.log("hello world");
+import { Database } from "sqlite3";
 
-// Quick fix whilst there are no imports here to make this file a module
-export {};
+const database = new Database('assets/db.sqlite');
+
+database.get(
+    'SELECT RANDOM() % 100 as result',
+    (_, res) => console.log(res)
+)
