@@ -24,19 +24,22 @@ export class DatabaseUtils {
      * @returns false if query execution was successful, else true.
      */
 
-    public jsonQuery(database: Database, json: string): boolean {
+    public jsonQuery(database: Database, json: string): void {
         var message: message = JSON.parse(json);
 
         switch (message['action']) {
             case "create":
                 switch (message['type']) {
                     case "table":
-                        this.createTable(database, message['name'], message['data'], message['data_types']);
+                        if (this.createTable(database, message['name'], message['data'], message['data_types'])) {
+                            console.log("Table creation successful.")
+                        } else {
+                            console.error("Error during table creaton.");
+                        }
                         break;
                     case "entry":
                         break;
                     default:
-                        return false;
                         console.error("No creatable data type detected.");
                         break;
                 }
@@ -47,12 +50,9 @@ export class DatabaseUtils {
                  case "delete":
                     break;
                 default:
-                    return false;
                     console.error("Error detecting database method (CRUD).");
                     break;   
         }
-
-        return true;
     }
 
     /**
@@ -67,7 +67,6 @@ export class DatabaseUtils {
 
     public createTable(database: Database, table_name: string, table_colums: string[], table_columns_types: string[]): boolean {
         if (table_colums.length != table_columns_types.length) {
-            console.error("Table creation unsuccessful.");
             return false;
         } 
         
@@ -87,8 +86,6 @@ export class DatabaseUtils {
         }
 
         query += ")";
-
-        console.info(query);
 
         database.exec(query);
         return true;
