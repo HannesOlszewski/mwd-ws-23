@@ -2,11 +2,13 @@
     "action": "create",
     "type": "table",
     "name": "items",
-    "columns": [
+    "data": [
         "name",
-        "description"
+        "description",
+        "origin"
     ],
-    "column_types": [
+    "data_types": [
+        "VARCHAR(128)",
         "VARCHAR(128)",
         "VARCHAR(128)"
     ]

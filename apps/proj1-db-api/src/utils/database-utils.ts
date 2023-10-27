@@ -4,15 +4,25 @@ type message = {
     action: string,
     type: string,
     name: string,
-    columns: string[],
-    column_types: string[]
+    data: string[],
+    data_types: string[]
 };
 
-// Provides functions to interact with db.sqlite 
+/**
+ * This class provides methods to interact with the database, e.g. insert new data or query a search string.
+ */
+
 export class DatabaseUtils {
 
-    public demo_create_columns: string[] = ["name", "description"];
-    public demo_create_column_types: string []= ["VARCHAR(128)", "VARCHAR(128)"];
+    /**
+     * This function parses JSON formatted data and selects 
+     * depending on the database method (CRUD) and data type (table, entry)
+     * the corresponding class method to execute a sqlite3 query.
+     * 
+     * @param database - sets database.
+     * @param json - JSON formatted data, needs to fit the message type.
+     * @returns false if query execution was successful, else true.
+     */
 
     public jsonQuery(database: Database, json: string): boolean {
         var message: message = JSON.parse(json);
@@ -21,11 +31,13 @@ export class DatabaseUtils {
             case "create":
                 switch (message['type']) {
                     case "table":
-                        this.createTable(database, message['name'], message['columns'], message['column_types']);
+                        this.createTable(database, message['name'], message['data'], message['data_types']);
                         break;
                     case "entry":
                         break;
                     default:
+                        return false;
+                        console.error("No creatable data type detected.");
                         break;
                 }
                 case "read":
@@ -35,10 +47,10 @@ export class DatabaseUtils {
                  case "delete":
                     break;
                 default:
+                    return false;
+                    console.error("Error detecting database method (CRUD).");
                     break;   
         }
-
-        console.log(message['action']);
 
         return true;
     }
@@ -46,10 +58,10 @@ export class DatabaseUtils {
     /**
      * Creates table in provided database.
      * 
-     * @param database: sets database.
-     * @param table_name: sets table name.
-     * @param table_colums: array of column names.
-     * @param table_columns_types: array of column types, positions align with @param table_colum's values. Example: "VARCHAR(128)"
+     * @param database - sets database.
+     * @param table_name - sets table name.
+     * @param table_colums - array of column names.
+     * @param table_columns_types - array of column types, positions align with @param table_colum's values. Example: "VARCHAR(128)"
      * @returns false if any error occured, else true.
      */
 

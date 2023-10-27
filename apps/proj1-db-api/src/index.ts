@@ -8,13 +8,3 @@ const databaseUtils = new DatabaseUtils();
 const demo_create_table: string = fs.readFileSync("json/create_table.json").toString();
 
 databaseUtils.jsonQuery(database, demo_create_table);
-
-/*
-databaseUtils.createTable(
-    database,
-    "items",
-    databaseUtils.demo_create_columns,
-    databaseUtils.demo_create_column_types
-);
-*/
-
