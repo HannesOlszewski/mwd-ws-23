@@ -9,4 +9,10 @@ database.get(
     (_, res) => console.log(res)
 );
 
-databaseUtils.initializeDatabaseSchema(database, 'item.sql');
+databaseUtils.createTable(
+    database,
+    "items",
+    databaseUtils.demo_create_columns,
+    databaseUtils.demo_create_column_types
+);
+
