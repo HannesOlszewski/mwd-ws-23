@@ -1,10 +1,47 @@
 import { Database } from "sqlite3";
 
+type message = {
+    action: string,
+    type: string,
+    name: string,
+    columns: string[],
+    column_types: string[]
+};
+
 // Provides functions to interact with db.sqlite 
 export class DatabaseUtils {
 
     public demo_create_columns: string[] = ["name", "description"];
     public demo_create_column_types: string []= ["VARCHAR(128)", "VARCHAR(128)"];
+
+    public jsonQuery(database: Database, json: string): boolean {
+        var message: message = JSON.parse(json);
+
+        switch (message['action']) {
+            case "create":
+                switch (message['type']) {
+                    case "table":
+                        this.createTable(database, message['name'], message['columns'], message['column_types']);
+                        break;
+                    case "entry":
+                        break;
+                    default:
+                        break;
+                }
+                case "read":
+                    break;
+                 case "update":
+                    break;
+                 case "delete":
+                    break;
+                default:
+                    break;   
+        }
+
+        console.log(message['action']);
+
+        return true;
+    }
 
     /**
      * Creates table in provided database.
@@ -31,7 +68,7 @@ export class DatabaseUtils {
         for (let i = 0; i < table_colums.length && i < table_columns_types.length; i++) {
             query += table_colums[i] + " " + table_columns_types[i] + " NOT NULL";
 
-            // HACK to remove comma in last row, could be better implemented.
+            // HACK to not set comma in last row of query, could be better implemented.
             if (table_colums.length - i != 1 && table_columns_types.length - i != 1) {
                 query += ",";
             }

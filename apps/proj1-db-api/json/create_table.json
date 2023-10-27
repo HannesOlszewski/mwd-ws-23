@@ -1,0 +1,13 @@
+{
+    "action": "create",
+    "type": "table",
+    "name": "items",
+    "columns": [
+        "name",
+        "description"
+    ],
+    "column_types": [
+        "VARCHAR(128)",
+        "VARCHAR(128)"
+    ]
+}
