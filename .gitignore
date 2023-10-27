@@ -38,3 +38,4 @@ yarn-error.log*
 # nodejs
 node_modules/
 dist/
+apps/proj1-db-api/assets/db.sqlite
