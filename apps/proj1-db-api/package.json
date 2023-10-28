@@ -13,7 +13,9 @@
     "format": "eslint 'src/**/*.ts' --fix && prettier --write 'src/**/*.ts'"
   },
   "dependencies": {
-    "sqlite3": "^5.1.6"
+    "node": "^21.1.0",
+    "sqlite3": "^5.1.6",
+    "ws": "^8.14.2"
   },
   "devDependencies": {
     "@types/node": "^17.0.45",
