@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "license": "MIT",
-  "main": "dist/index.js",
   "scripts": {
-    "dev": "ts-node src/index.ts",
-    "prod": "node dist/index.js",
+    "server:dev": "ts-node src/server.ts",
+    "server:prod": "node dist/server.js",
+    "client:dev": "ts-node src/client.ts",
+    "client:prod": "node dist/client.js",
     "build": "tsc",
     "lint": "tsc --noEmit && eslint 'src/**/*.ts' && prettier --check 'src/**/*.ts'",
     "format": "eslint 'src/**/*.ts' --fix && prettier --write 'src/**/*.ts'"
