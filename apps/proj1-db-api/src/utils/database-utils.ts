@@ -43,15 +43,15 @@ export class DatabaseUtils {
                         console.error("No creatable data type detected.");
                         break;
                 }
-                case "read":
-                    break;
-                 case "update":
-                    break;
-                 case "delete":
-                    break;
-                default:
-                    console.error("Error detecting database method (CRUD).");
-                    break;   
+            case "read":
+                break;
+            case "update":
+                break;
+            case "delete":
+                break;
+            default:
+                console.error("Error detecting database method (CRUD).");
+                break;
         }
     }
 
@@ -68,8 +68,8 @@ export class DatabaseUtils {
     public createTable(database: Database, table_name: string, table_colums: string[], table_columns_types: string[]): boolean {
         if (table_colums.length != table_columns_types.length) {
             return false;
-        } 
-        
+        }
+
         //Build query string
         var query: string = "";
 

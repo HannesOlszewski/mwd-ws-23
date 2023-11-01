@@ -15,22 +15,22 @@ readlineService.closeOnCtrlC();
 readlineService.exitProcessOnClose();
 
 const websocket = new WebSocket(`${API_URL}`, {
-    perMessageDeflate: false,
-  });
+  perMessageDeflate: false,
+});
 
-  const rl = readlineService.readlineInterface();
+const rl = readlineService.readlineInterface();
 
-  websocket.on("open", () => {
-    console.log("Connected to the API websocket.");
-    websocket.send(demo_create_table);
-  });
+websocket.on("open", () => {
+  console.log("Connected to the API websocket.");
+  websocket.send(demo_create_table);
+});
 
-  websocket.on("close", () => {
-    console.log("Disconnected from the API websocket.");
-    rl.close();
-  });
+websocket.on("close", () => {
+  console.log("Disconnected from the API websocket.");
+  rl.close();
+});
 
-  websocket.on("error", (error: Error) => {
-    console.error(`Error: ${error.message}`);
-    rl.close();
-  });
+websocket.on("error", (error: Error) => {
+  console.error(`Error: ${error.message}`);
+  rl.close();
+});
