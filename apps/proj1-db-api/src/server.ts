@@ -10,42 +10,51 @@ const database = new Database('assets/db.sqlite');
 const databaseUtils = new DatabaseUtils();
 const readlineService = new ReadlineService();
 
-const use_express: boolean = true;
+//const mode: string = "node.js";
+const mode: string = "express.js";
 
 readlineService.closeOnCtrlC("Shutting down...");
 readlineService.exitProcessOnClose();
 
-if (use_express) {
-    var express = require('express');
-    var app = express();
-    var expressWs = require('express-ws')(app);
-    var router = express.Router();
+switch (mode) {
+    case "node.js":
+        var websocketServer = new WebSocket.Server({ port: 8080 });
 
-    app.ws('/', function(ws: WebSocket, req: http.IncomingMessage) {
-        ws.on('message', function(message: string) {
-            console.log("Received message from user: ${message}");
-            databaseUtils.jsonQuery(database, message);
-        });
-      });
+        websocketServer.on(
+            "connection",
+            (ws: WebSocket, _request: http.IncomingMessage, client: string) => {
+                console.log(`${client} connected`);
 
-      app.listen(8080);
-} else {
-    var websocketServer = new WebSocket.Server({ port: 8080 });
+                ws.on("message", (message: string) => {
+                    console.log("Received message from user.");
+                    databaseUtils.jsonQuery(database, message);
+                });
 
-    websocketServer.on(
-        "connection",
-        (ws: WebSocket, _request: http.IncomingMessage, client: string) => {
-            console.log(`${client} connected`);
+                ws.on("close", () => {
+                    console.log("user disconnected");
+                });
+            }
+        );
+        break;
+    case "express.js":
+        var express = require('express');
+        var app = express();
 
-            ws.on("message", (message: string) => {
-                console.log("Received message from user: ${message}");
+        //needed for some reason, even though the variables are never used...
+        var expressWs = require('express-ws')(app);
+        var router = express.Router();
+
+        app.ws('/', function (ws: WebSocket, req: http.IncomingMessage) {
+            ws.on('message', function (message: string) {
+                console.log("Received message from user.");
                 databaseUtils.jsonQuery(database, message);
             });
+        });
 
-            ws.on("close", () => {
-                console.log("user disconnected");
-            });
-        }
-    );
+        app.listen(8080);
+        break;
+    default:
+        console.error("No framework selected.");
+        break;
 }
 
