@@ -11,7 +11,10 @@
     "lint": "tsc --noEmit && eslint 'src/**/*.ts' && prettier --check 'src/**/*.ts'",
     "format": "eslint 'src/**/*.ts' --fix && prettier --write 'src/**/*.ts'"
   },
-  "dependencies": {},
+  "dependencies": {
+    "sqlite": "^5.0.1",
+    "sqlite3": "^5.1.6"
+  },
   "devDependencies": {
     "@types/node": "^17.0.45",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
