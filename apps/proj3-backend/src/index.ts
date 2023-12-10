@@ -12,15 +12,47 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-const openDatabaseConnections: Record<string, Database> = {};
+/**
+ * Represents a database connection.
+ */
+interface DatabaseConnection {
+  /**
+   * The name of the database.
+   */
+  name: string;
+  /**
+   * The database instance.
+   */
+  database: Database;
+  /**
+   * The date when the database was last accessed.
+   */
+  lastAccessed: Date;
+}
+
+const openDatabaseConnections: DatabaseConnection[] = [];
 
 app.get("/database/:name/connect", (req, res) => {
   const databaseName = req.params.name;
 
+  const activeDatabaseConnection = openDatabaseConnections.find(
+    (connection) => connection.name === databaseName
+  );
+
+  if (activeDatabaseConnection) {
+    activeDatabaseConnection.lastAccessed = new Date();
+    res.send(`Already connected to database ${databaseName}`);
+    return;
+  }
+
   databaseFactory
     .createDatabase({ database: databaseName })
     .then((database) => {
-      openDatabaseConnections[databaseName] = database;
+      openDatabaseConnections.push({
+        name: databaseName,
+        database,
+        lastAccessed: new Date(),
+      });
       res.send(`Connected to database ${databaseName}`);
     })
     .catch((error) => {
@@ -31,9 +63,9 @@ app.get("/database/:name/connect", (req, res) => {
 
 app.get("/database/:name/disconnect", (req, res) => {
   const databaseName = req.params.name;
-  const database = Object.entries(openDatabaseConnections).find(
-    ([name]) => name === databaseName,
-  )?.[1];
+  const database = openDatabaseConnections.find(
+    ({ name }) => name === databaseName
+  )?.database;
 
   if (!database) {
     res.send(`No connection to database ${databaseName} to close`);
@@ -43,16 +75,33 @@ app.get("/database/:name/disconnect", (req, res) => {
   database
     .closeConnection()
     .then(() => {
+      openDatabaseConnections.splice(
+        openDatabaseConnections.findIndex(({ name }) => name === databaseName),
+        1
+      );
       res.send(`Disconnected from database ${databaseName}`);
     })
     .catch((error) => {
       logger.error(
-        `Failed to disconnect from database ${databaseName}: ${error}`,
+        `Failed to disconnect from database ${databaseName}: ${error}`
       );
       res.send(`Failed to disconnect from database ${databaseName}: ${error}`);
     });
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   logger.log(`Listening on port ${port}`);
+});
+
+server.on("close", () => {
+  openDatabaseConnections.forEach(({ name, database }) => {
+    database
+      .closeConnection()
+      .then(() => {
+        logger.log(`Disconnected from database ${name}`);
+      })
+      .catch((error) => {
+        logger.error(`Failed to disconnect from database ${name}: ${error}`);
+      });
+  });
 });
