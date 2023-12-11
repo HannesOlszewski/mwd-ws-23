@@ -83,6 +83,54 @@ export interface Database {
    * @returns A promise that resolves when the table is deleted.
    */
   deleteTable: (name: string) => Promise<void>;
+
+  /**
+   * Gets the columns in a table.
+   *
+   * @param table - The name of the table.
+   *
+   * @returns A promise that resolves with the columns in the table.
+   */
+  getColumns: (table: string) => Promise<Column[]>;
+
+  /**
+   * Adds a column to a table.
+   *
+   * @param table - The name of the table.
+   * @param column - The column to add.
+   *
+   * @returns A promise that resolves when the column is added.
+   */
+  addColumn: (table: string, column: Column) => Promise<void>;
+
+  /**
+   * Deletes a column from a table.
+   *
+   * @param table - The name of the table.
+   * @param column - The name of the column to delete.
+   *
+   * @returns A promise that resolves when the column is deleted.
+   */
+  deleteColumn: (table: string, column: string) => Promise<void>;
+
+  /**
+   * Gets the rows in a table.
+   *
+   * @param table - The name of the table.
+   * @param where - The where clause.
+   * @param orderBy - The order by clause.
+   * @param limit - The limit clause.
+   * @param offset - The offset clause.
+   *
+   * @returns A promise that resolves with the rows in the table.
+   */
+  getRows: (
+    table: string,
+    where?: string,
+    orderBy?: Record<string, "ASC" | "DESC">,
+    limit?: number,
+    offset?: number
+  ) => Promise<unknown[]>;
 }
 
 /**
