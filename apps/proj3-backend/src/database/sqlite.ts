@@ -193,7 +193,7 @@ export class SqliteDatabase implements Database {
     if (orderBy) {
       query += ` ORDER BY ${Object.entries(orderBy)
         .map(([column, order]) => `${column} ${order}`)
-        .join(",")}`;
+        .join(", ")}`;
     }
 
     if (limit) {
