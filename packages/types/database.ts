@@ -51,6 +51,11 @@ export interface Database {
    */
   isConnectedToDatabase: () => boolean;
 
+  /**
+   * Gets the schemas in the database.
+   *
+   * @returns A promise that resolves with the schemas in the database.
+   */
   getSchemas(): Promise<string[]>;
 
   /**
