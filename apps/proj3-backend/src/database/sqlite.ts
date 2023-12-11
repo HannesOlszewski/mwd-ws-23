@@ -31,7 +31,11 @@ export class SqliteDatabase implements Database {
   }
 
   async connect(options: DatabaseOptions): Promise<void> {
-    // TODO: handle case when already connected to a different database than specified in options
+    if (this.db) {
+      this.logger.error("Already connected to SQLite database");
+      throw new Error("Already connected to SQLite database");
+    }
+
     const dbName: string = options.database ?? DEFAULT_DATABASE_NAME;
 
     this.logger.log(`Connecting to SQLite database ${dbName}...`);
