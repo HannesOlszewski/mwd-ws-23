@@ -65,9 +65,10 @@ export class SqliteDatabase implements Database {
       throw new Error("No connection to SQLite database");
     }
 
-    const schemas = await this.db.all<{ name: string }[]>(
-      "SELECT name FROM sqlite_master WHERE type = 'table'"
-    );
+    const query = "SELECT name FROM sqlite_master WHERE type = 'table'";
+
+    this.logger.debug(query);
+    const schemas = await this.db.all<{ name: string }[]>(query);
 
     return schemas.map((schema) => schema.name);
   }
@@ -78,9 +79,10 @@ export class SqliteDatabase implements Database {
       throw new Error("No connection to SQLite database");
     }
 
-    const tables = await this.db.all<{ name: string }[]>(
-      "SELECT name FROM sqlite_master WHERE type = 'table'"
-    );
+    const query = "SELECT name FROM sqlite_master WHERE type = 'table'";
+
+    this.logger.debug(query);
+    const tables = await this.db.all<{ name: string }[]>(query);
 
     return tables.map((table) => table.name);
   }
@@ -112,9 +114,10 @@ export class SqliteDatabase implements Database {
       })
       .join(", ");
 
-    this.logger.log(`Creating table ${name} with ${columns.length} columns...`);
-    await this.db.run(`CREATE TABLE ${name} (${columnsString})`);
-    this.logger.log(`Created table ${name}`);
+    const query = `CREATE TABLE ${name} (${columnsString})`;
+
+    this.logger.debug(query);
+    await this.db.run(query);
   }
 
   async deleteTable(name: string): Promise<void> {
@@ -123,9 +126,10 @@ export class SqliteDatabase implements Database {
       throw new Error("No connection to SQLite database");
     }
 
-    this.logger.log(`Dropping table ${name}...`);
-    await this.db.run(`DROP TABLE ${name}`);
-    this.logger.log(`Dropped table ${name}`);
+    const query = `DROP TABLE ${name}`;
+
+    this.logger.debug(query);
+    await this.db.run(query);
   }
 
   async getColumns(table: string): Promise<Column[]> {
@@ -133,7 +137,10 @@ export class SqliteDatabase implements Database {
       throw new Error("No connection to SQLite database");
     }
 
-    return this.db.all<Column[]>(`PRAGMA table_info(${table})`);
+    const query = `PRAGMA table_info(${table})`;
+
+    this.logger.debug(query);
+    return this.db.all<Column[]>(query);
   }
 
   async addColumn(table: string, column: Column): Promise<void> {
@@ -147,11 +154,10 @@ export class SqliteDatabase implements Database {
     const primaryKey = column.primaryKey ? "PRIMARY KEY" : "";
     const unique = column.unique ? "UNIQUE" : "";
 
-    this.logger.log(`Adding column ${column.name} to table ${table}...`);
-    await this.db.run(
-      `ALTER TABLE ${table} ADD COLUMN ${column.name} ${type} ${nullable} ${primaryKey} ${unique}`
-    );
-    this.logger.log(`Added column ${column.name} to table ${table}`);
+    const query = `ALTER TABLE ${table} ADD COLUMN ${column.name} ${type} ${nullable} ${primaryKey} ${unique}`;
+
+    this.logger.debug(query);
+    await this.db.run(query);
   }
 
   async deleteColumn(table: string, column: string): Promise<void> {
@@ -160,9 +166,10 @@ export class SqliteDatabase implements Database {
       throw new Error("No connection to SQLite database");
     }
 
-    this.logger.log(`Dropping column ${column} from table ${table}...`);
-    await this.db.run(`ALTER TABLE ${table} DROP COLUMN ${column}`);
-    this.logger.log(`Dropped column ${column} from table ${table}`);
+    const query = `ALTER TABLE ${table} DROP COLUMN ${column}`;
+
+    this.logger.debug(query);
+    await this.db.run(query);
   }
 
   async getRows(
@@ -197,6 +204,7 @@ export class SqliteDatabase implements Database {
       query += ` OFFSET ${offset}`;
     }
 
+    this.logger.debug(query);
     return this.db.all<unknown[]>(query);
   }
 }
