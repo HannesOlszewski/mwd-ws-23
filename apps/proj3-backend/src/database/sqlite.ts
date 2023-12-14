@@ -165,7 +165,6 @@ export class SqliteDatabase implements Database {
 
     this.logger.debug(query);
     const result = await this.db.all<SqliteColumn[]>(query);
-    this.logger.debug(JSON.stringify(result));
 
     return result.map((column) => ({
       name: column.name,
