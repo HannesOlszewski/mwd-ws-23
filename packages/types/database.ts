@@ -21,7 +21,7 @@ export interface DatabaseOptions {
   /**
    * The name of the database to connect to.
    */
-  database?: string;
+  database: string;
 }
 
 /**
@@ -134,6 +134,11 @@ export interface Database {
 }
 
 /**
+ * Represents a column type.
+ */
+export type ColumnType = "TEXT" | "INTEGER" | "FLOAT";
+
+/**
  * Represents a column in a database table.
  */
 export interface Column {
@@ -144,7 +149,7 @@ export interface Column {
   /**
    * The type of the column.
    */
-  type?: "TEXT" | "INTEGER" | "REAL" | "BLOB";
+  type: ColumnType;
   /**
    * Whether the column is nullable.
    */
