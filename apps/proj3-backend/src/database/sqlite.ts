@@ -2,13 +2,22 @@ import fs from "node:fs";
 import { Database as Sqlite3Database } from "sqlite3";
 import type { Database as SqliteDatabaseType } from "sqlite";
 import { open } from "sqlite";
-import type { Column, Database, DatabaseOptions } from "types";
+import type { Column, ColumnType, Database, DatabaseOptions } from "types";
 import { Logger } from "../utils/logger";
 
 /**
  * The directory where the SQLite databases are stored.
  */
 const DATABASE_DIRECTORY = "./databases";
+
+interface SqliteColumn {
+  cid: number;
+  name: string;
+  type: ColumnType;
+  notnull: number;
+  dflt_value: unknown;
+  pk: number;
+}
 
 /**
  * Represents a SQLite database connection.
@@ -63,6 +72,7 @@ export class SqliteDatabase implements Database {
 
     this.logger.log(`Closing connection to SQLite database ${dbName}...`);
     await this.db.close();
+    this.db = undefined;
     this.logger.log(`Closed connection to SQLite database ${dbName}`);
   }
 
@@ -118,17 +128,20 @@ export class SqliteDatabase implements Database {
       .map((column) => {
         const type = column.type;
         const nullable = column.nullable ? "" : "NOT NULL";
-        const primaryKey = column.primaryKey ? "PRIMARY KEY" : "";
+        const primaryKey = column.primaryKey ? "PRIMARY KEY ASC" : "";
         const unique = column.unique ? "UNIQUE" : "";
 
-        return `${column.name} ${type} ${nullable} ${primaryKey} ${unique}`;
+        return [column.name, type, nullable, primaryKey, unique]
+          .filter((value) => value.length > 0)
+          .join(" ");
       })
       .join(", ");
 
-    const query = `CREATE TABLE ${name} (${columnsString})`;
+    const query = `CREATE TABLE ${name}(${columnsString})`;
 
     this.logger.debug(query);
-    await this.db.run(query);
+    const result = await this.db.run(query);
+    this.logger.debug(JSON.stringify(result));
   }
 
   async deleteTable(name: string): Promise<void> {
@@ -151,7 +164,16 @@ export class SqliteDatabase implements Database {
     const query = `PRAGMA table_info(${table})`;
 
     this.logger.debug(query);
-    return this.db.all<Column[]>(query);
+    const result = await this.db.all<SqliteColumn[]>(query);
+    this.logger.debug(JSON.stringify(result));
+
+    return result.map((column) => ({
+      name: column.name,
+      type: column.type,
+      nullable: column.notnull === 0,
+      primaryKey: column.pk === 1,
+      unique: column.pk === 1,
+    }));
   }
 
   async addColumn(table: string, column: Column): Promise<void> {
