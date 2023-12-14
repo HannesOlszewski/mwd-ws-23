@@ -116,7 +116,7 @@ export class SqliteDatabase implements Database {
 
     const columnsString = columns
       .map((column) => {
-        const type = column.type ?? "TEXT";
+        const type = column.type;
         const nullable = column.nullable ? "" : "NOT NULL";
         const primaryKey = column.primaryKey ? "PRIMARY KEY" : "";
         const unique = column.unique ? "UNIQUE" : "";
