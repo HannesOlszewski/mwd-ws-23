@@ -1,6 +1,16 @@
 import express, { json } from "express";
-import type { Column, ColumnType } from "types";
+import type {
+  AddColumnEvent,
+  Column,
+  ColumnType,
+  DeleteColumnEvent,
+  AddTableEvent,
+  DeleteTableEvent,
+} from "types";
 import { routes } from "types";
+import { v4 as uuidv4 } from "uuid";
+import type WebSocket from "ws";
+import { WebSocketServer } from "ws";
 import { Logger } from "./utils/logger";
 import { ApiController } from "./controller/api-controller";
 import { errorMessage, successMessage } from "./utils/response";
@@ -9,6 +19,7 @@ import {
   parseRequestData,
   parseRequestQuery,
 } from "./utils/request";
+import { broadcast } from "./utils/websocket";
 
 const app = express();
 app.use(json());
@@ -223,4 +234,88 @@ server.on("SIGTERM", () => {
       logger.error(`Error closing api controller: ${error}`);
     });
   });
+});
+
+const wss = new WebSocketServer({ server, path: "/ws" });
+
+const webSocketConnections = new Map<string, WebSocket>();
+
+wss.on("connection", (ws: WebSocket) => {
+  logger.log("Client connected");
+
+  const id = uuidv4();
+  webSocketConnections.set(id, ws);
+
+  ws.on("close", () => {
+    logger.log("Client disconnected");
+    webSocketConnections.delete(id);
+  });
+});
+
+apiController.on<AddTableEvent>("add-table", (data) => {
+  if (!data) {
+    return;
+  }
+
+  const { table } = data;
+
+  logger.debug(
+    `Sending add-table event to ${webSocketConnections.size} clients`
+  );
+
+  broadcast<AddTableEvent>(
+    { type: "add-table", table },
+    Array.from(webSocketConnections.values())
+  );
+});
+
+apiController.on<DeleteTableEvent>("delete-table", (data) => {
+  if (!data) {
+    return;
+  }
+
+  const { table } = data;
+
+  logger.debug(
+    `Sending delete-table event to ${webSocketConnections.size} clients`
+  );
+
+  broadcast<DeleteTableEvent>(
+    { type: "delete-table", table },
+    Array.from(webSocketConnections.values())
+  );
+});
+
+apiController.on<AddColumnEvent>("add-column", (data) => {
+  if (!data) {
+    return;
+  }
+
+  logger.debug(
+    `Sending add-column event to ${webSocketConnections.size} clients`
+  );
+
+  const { table, column } = data;
+
+  broadcast<AddColumnEvent>(
+    { type: "add-column", table, column },
+    Array.from(webSocketConnections.values())
+  );
+});
+
+apiController.on<DeleteColumnEvent>("delete-column", (data) => {
+  if (!data) {
+    return;
+  }
+
+  logger.debug(
+    `Sending delete-column event to ${webSocketConnections.size} clients`
+  );
+
+  const { table, column } = data;
+
+  broadcast<DeleteColumnEvent>(
+    { type: "delete-column", table, column },
+    Array.from(webSocketConnections.values())
+  );
 });
