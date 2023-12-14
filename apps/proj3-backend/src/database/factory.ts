@@ -39,4 +39,18 @@ export class DatabaseFactory {
 
     return database;
   }
+
+  /**
+   * Retrieves the available databases based on the current database type.
+   * @returns A promise that resolves to an array of strings representing the available databases.
+   * @throws If the database type is unknown.
+   */
+  public async getAvailableDatabases(): Promise<string[]> {
+    switch (this.dbType) {
+      case "sqlite":
+        return SqliteDatabase.getAvailableDatabases();
+      default:
+        throw new Error("Unknown database type");
+    }
+  }
 }
