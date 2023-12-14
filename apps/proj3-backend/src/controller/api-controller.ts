@@ -1,4 +1,10 @@
-import type { Column, Database, DatabaseOptions } from "types";
+import type {
+  ApiEvent,
+  Column,
+  Database,
+  DatabaseOptions,
+  EventName,
+} from "types";
 import { DatabaseFactory } from "../database/factory";
 import { Logger } from "../utils/logger";
 
@@ -27,11 +33,18 @@ export class ApiController {
   private logger: Logger;
   private databaseFactory: DatabaseFactory;
   private databaseConnections: DatabaseConnection[];
+  private eventListeners: Record<EventName, (<T>(data?: T) => void)[]>;
 
   constructor() {
     this.logger = new Logger("api-controller");
     this.databaseFactory = new DatabaseFactory("sqlite");
     this.databaseConnections = [];
+    this.eventListeners = {
+      "add-table": [],
+      "delete-table": [],
+      "add-column": [],
+      "delete-column": [],
+    };
   }
 
   /**
@@ -231,6 +244,34 @@ export class ApiController {
       orderBy,
       limit,
       offset
+    );
+  }
+
+  /**
+   * Adds a listener for the specified event.
+   *
+   * @param eventName - The name of the event to listen to.
+   * @param listener - The listener function.
+   */
+  on<T extends ApiEvent>(
+    eventName: EventName,
+    listener: (data?: T) => void
+  ): void {
+    this.eventListeners[eventName].push(listener as (data?: unknown) => void);
+  }
+
+  /**
+   * Removes a listener for the specified event.
+   *
+   * @param eventName - The name of the event.
+   * @param listener - The listener function to remove.
+   */
+  off<T extends ApiEvent>(
+    eventName: EventName,
+    listener: (data?: T) => void
+  ): void {
+    this.eventListeners[eventName] = this.eventListeners[eventName].filter(
+      (eventListener) => eventListener !== listener
     );
   }
 }
