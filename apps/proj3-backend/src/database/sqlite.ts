@@ -239,4 +239,59 @@ export class SqliteDatabase implements Database {
     this.logger.debug(query);
     return this.db.all<unknown[]>(query);
   }
+
+  async addRow(table: string, row: Record<string, unknown>): Promise<void> {
+    if (!this.db) {
+      this.logger.error("No connection to SQLite database");
+      throw new Error("No connection to SQLite database");
+    }
+
+    const columns = Object.keys(row).join(", ");
+    const values = Object.values(row)
+      .map((value) => `"${String(value)}"`)
+      .join(", ");
+    const query = `INSERT INTO ${table} (${columns}) VALUES (${values})`;
+
+    this.logger.debug(query);
+    await this.db.run(query);
+  }
+
+  async updateRow(
+    table: string,
+    row: Record<string, unknown>,
+    where?: string
+  ): Promise<void> {
+    if (!this.db) {
+      this.logger.error("No connection to SQLite database");
+      throw new Error("No connection to SQLite database");
+    }
+
+    const columns = Object.entries(row)
+      .map(([column, value]) => `${column} = "${String(value)}"`)
+      .join(", ");
+    let query = `UPDATE ${table} SET ${columns}`;
+
+    if (where) {
+      query += ` WHERE ${where}`;
+    }
+
+    this.logger.debug(query);
+    await this.db.run(query);
+  }
+
+  async deleteRow(table: string, where?: string): Promise<void> {
+    if (!this.db) {
+      this.logger.error("No connection to SQLite database");
+      throw new Error("No connection to SQLite database");
+    }
+
+    let query = `DELETE FROM ${table}`;
+
+    if (where) {
+      query += ` WHERE ${where}`;
+    }
+
+    this.logger.debug(query);
+    await this.db.run(query);
+  }
 }

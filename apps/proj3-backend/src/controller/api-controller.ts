@@ -248,6 +248,65 @@ export class ApiController {
   }
 
   /**
+   * Adds a row to the database table.
+   *
+   * @param options - The database connection options.
+   * @param table - The name of the table to add the row to.
+   * @param row - The row to add.
+   *
+   * @returns A promise that resolves when the row is added.
+   */
+  async addRow(
+    options: DatabaseOptions,
+    table: string,
+    row: Record<string, unknown>
+  ): Promise<void> {
+    const databaseConnection = await this.getDatabaseConnection(options);
+
+    return databaseConnection.database.addRow(table, row);
+  }
+
+  /**
+   * Updates a row in the database table.
+   *
+   * @param options - The database connection options.
+   * @param table - The name of the table to update the row in.
+   * @param row - The row to update.
+   * @param where - The WHERE clause to filter the rows.
+   *
+   * @returns A promise that resolves when the row is updated.
+   */
+  async updateRow(
+    options: DatabaseOptions,
+    table: string,
+    row: Record<string, unknown>,
+    where?: string
+  ): Promise<void> {
+    const databaseConnection = await this.getDatabaseConnection(options);
+
+    return databaseConnection.database.updateRow(table, row, where);
+  }
+
+  /**
+   * Deletes a row from the database table.
+   *
+   * @param options - The database connection options.
+   * @param table - The name of the table to delete the row from.
+   * @param where - The WHERE clause to filter the rows.
+   *
+   * @returns A promise that resolves when the row is deleted.
+   */
+  async deleteRow(
+    options: DatabaseOptions,
+    table: string,
+    where?: string
+  ): Promise<void> {
+    const databaseConnection = await this.getDatabaseConnection(options);
+
+    return databaseConnection.database.deleteRow(table, where);
+  }
+
+  /**
    * Adds a listener for the specified event.
    *
    * @param eventName - The name of the event to listen to.
