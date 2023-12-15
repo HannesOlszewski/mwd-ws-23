@@ -222,6 +222,73 @@ app.get(routes.rows, (req, res) => {
     });
 });
 
+app.post(routes.rows, (req, res) => {
+  // TODO: add schema support
+  const { databaseName, tableName } = parseRequestParams<{
+    databaseName: string;
+    schemaName: string;
+    tableName: string;
+  }>(req);
+  const { row } = parseRequestData<{
+    row: Record<string, unknown>;
+  }>(req);
+
+  apiController
+    .addRow({ database: databaseName }, tableName, row)
+    .then(() => {
+      res.send(successMessage());
+    })
+    .catch((error) => {
+      logger.error(`Error adding row: ${error}`);
+      res.status(500).send(errorMessage("Error adding row"));
+    });
+});
+
+app.put(routes.rows, (req, res) => {
+  // TODO: add schema support
+  const { databaseName, tableName } = parseRequestParams<{
+    databaseName: string;
+    schemaName: string;
+    tableName: string;
+  }>(req);
+  const { row, where } = parseRequestData<{
+    row: Record<string, unknown>;
+    where: string;
+  }>(req);
+
+  apiController
+    .updateRow({ database: databaseName }, tableName, row, where)
+    .then(() => {
+      res.send(successMessage());
+    })
+    .catch((error) => {
+      logger.error(`Error updating row: ${error}`);
+      res.status(500).send(errorMessage("Error updating row"));
+    });
+});
+
+app.delete(routes.rows, (req, res) => {
+  // TODO: add schema support
+  const { databaseName, tableName } = parseRequestParams<{
+    databaseName: string;
+    schemaName: string;
+    tableName: string;
+  }>(req);
+  const { where } = parseRequestData<{
+    where: string;
+  }>(req);
+
+  apiController
+    .deleteRow({ database: databaseName }, tableName, where)
+    .then(() => {
+      res.send(successMessage());
+    })
+    .catch((error) => {
+      logger.error(`Error deleting row: ${error}`);
+      res.status(500).send(errorMessage("Error deleting row"));
+    });
+});
+
 const server = app.listen(port, () => {
   logger.log(`Listening on port ${port}`);
 });
