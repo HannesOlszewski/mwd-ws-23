@@ -227,24 +227,82 @@ describe("SqliteDatabase", () => {
     });
   });
 
-  // TODO: enable this when rows can be inserted into a table
-  // it("should get rows from a table", async () => {
-  //   const options = { database: "test-db" };
-  //   await database.connect(options);
-  //   const columns: Column[] = [
-  //     { name: "id", type: "INTEGER", primaryKey: true, unique: true },
-  //     { name: "name", type: "TEXT", nullable: false },
-  //     { name: "age", type: "INTEGER", nullable: true },
-  //   ];
-  //   await database.createTable("users", columns);
-  //   // TODO: Add rows to table
+  it("should get rows from a table", async () => {
+    const options = { database: "test-db" };
+    await database.connect(options);
+    const columns: Column[] = [
+      { name: "id", type: "INTEGER", primaryKey: true, unique: true },
+      { name: "name", type: "TEXT", nullable: false },
+      { name: "age", type: "INTEGER", nullable: true },
+    ];
+    await database.createTable("users", columns);
+    const rows = [
+      { id: 1, name: "John Doe", age: 25 },
+      { id: 2, name: "Jane Smith", age: 30 },
+      { id: 3, name: "Bob Johnson", age: 40 },
+    ];
+    await Promise.all(rows.map((row) => database.addRow("users", row)));
 
-  //   const rows = await database.getRows("users");
+    const newRows = await database.getRows("users");
 
-  //   expect(rows).toEqual([
-  //     { id: 1, name: "John Doe", age: 25 },
-  //     { id: 2, name: "Jane Smith", age: 30 },
-  //     { id: 3, name: "Bob Johnson", age: 40 },
-  //   ]);
-  // });
+    expect(newRows).toEqual(rows);
+  });
+
+  it("should add a row to a table", async () => {
+    const options = { database: "test-db" };
+    await database.connect(options);
+    const columns: Column[] = [
+      { name: "id", type: "INTEGER", primaryKey: true, unique: true },
+      { name: "name", type: "TEXT", nullable: false },
+      { name: "age", type: "INTEGER", nullable: true },
+    ];
+    await database.createTable("users", columns);
+
+    const row = { id: 1, name: "John Doe", age: 25 };
+    await database.addRow("users", row);
+    const rows = await database.getRows("users");
+
+    expect(rows).toContainEqual(row);
+  });
+
+  it("should update a row in a table", async () => {
+    const options = { database: "test-db" };
+    await database.connect(options);
+    const columns: Column[] = [
+      { name: "id", type: "INTEGER", primaryKey: true, unique: true },
+      { name: "name", type: "TEXT", nullable: false },
+      { name: "age", type: "INTEGER", nullable: true },
+    ];
+    await database.createTable("users", columns);
+
+    const initialRow = { id: 1, name: "John Doe", age: 25 };
+    await database.addRow("users", initialRow);
+
+    const updatedRow = { id: 1, name: "John Smith", age: 30 };
+    await database.updateRow("users", updatedRow);
+
+    const rows = await database.getRows("users");
+
+    expect(rows).toContainEqual(updatedRow);
+  });
+
+  it("should delete a row from a table", async () => {
+    const options = { database: "test-db" };
+    await database.connect(options);
+    const columns: Column[] = [
+      { name: "id", type: "INTEGER", primaryKey: true, unique: true },
+      { name: "name", type: "TEXT", nullable: false },
+      { name: "age", type: "INTEGER", nullable: true },
+    ];
+    await database.createTable("users", columns);
+
+    const row = { id: 1, name: "John Doe", age: 25 };
+    await database.addRow("users", row);
+
+    await database.deleteRow("users", "id = 1");
+
+    const rows = await database.getRows("users");
+
+    expect(rows).not.toContainEqual(row);
+  });
 });

@@ -132,12 +132,61 @@ describe("ApiController", () => {
     expect(columns[0].name).toEqual("id");
   });
 
-  // TODO: Use this when we have a way to insert rows into a table.
-  // it("should retrieve rows", async () => {
-  //   const options = { database: "test-db" };
-  //   // TODO: Add a way to insert rows into a table.
-  //   const rows = await apiController.getRows(options, "users");
+  it("should retrieve rows", async () => {
+    const options = { database: "test-db" };
+    const columns: Column[] = [
+      { name: "id", type: "INTEGER", primaryKey: true },
+      { name: "name", type: "TEXT" },
+    ];
+    await apiController.createTable(options, "users", columns);
+    await apiController.addRow(options, "users", { name: "John" });
 
-  //   expect(rows).toEqual(expect.arrayContaining([{ id: 1, name: "John" }]));
-  // });
+    const rows = await apiController.getRows(options, "users");
+
+    expect(rows).toEqual(expect.arrayContaining([{ id: 1, name: "John" }]));
+  });
+
+  it("should add a row", async () => {
+    const options = { database: "test-db" };
+    const columns: Column[] = [
+      { name: "id", type: "INTEGER", primaryKey: true },
+      { name: "name", type: "TEXT" },
+    ];
+    await apiController.createTable(options, "users", columns);
+    await apiController.addRow(options, "users", { name: "John" });
+
+    const rows = await apiController.getRows(options, "users");
+
+    expect(rows).toEqual(expect.arrayContaining([{ id: 1, name: "John" }]));
+  });
+
+  it("should update a row", async () => {
+    const options = { database: "test-db" };
+    const columns: Column[] = [
+      { name: "id", type: "INTEGER", primaryKey: true },
+      { name: "name", type: "TEXT" },
+    ];
+    await apiController.createTable(options, "users", columns);
+    await apiController.addRow(options, "users", { name: "John" });
+    await apiController.updateRow(options, "users", { name: "Jane" }, "id = 1");
+
+    const rows = await apiController.getRows(options, "users");
+
+    expect(rows).toEqual(expect.arrayContaining([{ id: 1, name: "Jane" }]));
+  });
+
+  it("should delete a row", async () => {
+    const options = { database: "test-db" };
+    const columns: Column[] = [
+      { name: "id", type: "INTEGER", primaryKey: true },
+      { name: "name", type: "TEXT" },
+    ];
+    await apiController.createTable(options, "users", columns);
+    await apiController.addRow(options, "users", { name: "John" });
+    await apiController.deleteRow(options, "users", "id = 1");
+
+    const rows = await apiController.getRows(options, "users");
+
+    expect(rows).toHaveLength(0);
+  });
 });
