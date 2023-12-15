@@ -131,6 +131,41 @@ export interface Database {
     limit?: number,
     offset?: number
   ) => Promise<unknown[]>;
+
+  /**
+   * Adds a row to a table.
+   *
+   * @param table - The name of the table.
+   * @param row - The row to add.
+   *
+   * @returns A promise that resolves when the row is added.
+   */
+  addRow: (table: string, row: Record<string, unknown>) => Promise<void>;
+
+  /**
+   * Updates a row in a table.
+   *
+   * @param table - The name of the table.
+   * @param row - The row to update.
+   * @param where - The where clause.
+   *
+   * @returns A promise that resolves when the row is updated.
+   */
+  updateRow: (
+    table: string,
+    row: Record<string, unknown>,
+    where?: string
+  ) => Promise<void>;
+
+  /**
+   * Deletes a row from a table.
+   *
+   * @param table - The name of the table.
+   * @param where - The where clause.
+   *
+   * @returns A promise that resolves when the row is deleted.
+   */
+  deleteRow: (table: string, where?: string) => Promise<void>;
 }
 
 /**
