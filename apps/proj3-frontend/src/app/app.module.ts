@@ -15,6 +15,7 @@ import { DatabasesComponent } from './databases/databases.component';
 import { DatabaseTablesComponent } from './database-tables/database-tables.component';
 import { DatabaseTableColumnsComponent } from './database-table-columns/database-table-columns.component';
 import { DatabaseTableRowsComponent } from './database-table-rows/database-table-rows.component';
+import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 
 @NgModule({
   imports: [
@@ -35,6 +36,7 @@ import { DatabaseTableRowsComponent } from './database-table-rows/database-table
     DatabaseTablesComponent,
     DatabaseTableColumnsComponent,
     DatabaseTableRowsComponent,
+    BreadcrumbsComponent,
   ],
   bootstrap: [AppComponent],
 })
