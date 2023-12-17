@@ -257,7 +257,7 @@ export class SqliteDatabase implements Database {
     return this.db.all<unknown[]>(query);
   }
 
-  async addRow(table: string, row: Record<string, unknown>): Promise<void> {
+  async addRow(table: string, row: Record<string, unknown>): Promise<number> {
     if (!this.db) {
       this.logger.error("No connection to SQLite database");
       throw new Error("No connection to SQLite database");
@@ -270,7 +270,14 @@ export class SqliteDatabase implements Database {
     const query = `INSERT INTO ${table} (${columns}) VALUES (${values})`;
 
     this.logger.debug(query);
-    await this.db.run(query);
+    const result = await this.db.run(query);
+
+    if (result.lastID === undefined) {
+      this.logger.error("Failed to add row to SQLite database");
+      throw new Error("Failed to add row to SQLite database");
+    }
+
+    return result.lastID;
   }
 
   async updateRow(

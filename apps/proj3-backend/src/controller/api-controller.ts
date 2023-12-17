@@ -45,6 +45,9 @@ export class ApiController {
       "delete-table": [],
       "add-column": [],
       "delete-column": [],
+      "add-row": [],
+      "update-row": [],
+      "delete-row": [],
     };
   }
 
@@ -148,7 +151,13 @@ export class ApiController {
   ): Promise<void> {
     const databaseConnection = await this.getDatabaseConnection(options);
 
-    return databaseConnection.database.createTable(name, columns);
+    await databaseConnection.database.createTable(name, columns);
+
+    this.emit("add-table", {
+      type: "add-table",
+      database: options.database,
+      table: name,
+    });
   }
 
   /**
@@ -162,7 +171,13 @@ export class ApiController {
   async deleteTable(options: DatabaseOptions, name: string): Promise<void> {
     const databaseConnection = await this.getDatabaseConnection(options);
 
-    return databaseConnection.database.deleteTable(name);
+    await databaseConnection.database.deleteTable(name);
+
+    this.emit("delete-table", {
+      type: "delete-table",
+      database: options.database,
+      table: name,
+    });
   }
 
   /**
@@ -195,7 +210,14 @@ export class ApiController {
   ): Promise<void> {
     const databaseConnection = await this.getDatabaseConnection(options);
 
-    return databaseConnection.database.addColumn(table, column);
+    await databaseConnection.database.addColumn(table, column);
+
+    this.emit("add-column", {
+      type: "add-column",
+      database: options.database,
+      table,
+      column,
+    });
   }
 
   /**
@@ -214,7 +236,14 @@ export class ApiController {
   ): Promise<void> {
     const databaseConnection = await this.getDatabaseConnection(options);
 
-    return databaseConnection.database.deleteColumn(table, column);
+    await databaseConnection.database.deleteColumn(table, column);
+
+    this.emit("delete-column", {
+      type: "delete-column",
+      database: options.database,
+      table,
+      column,
+    });
   }
 
   /**
@@ -264,7 +293,17 @@ export class ApiController {
   ): Promise<void> {
     const databaseConnection = await this.getDatabaseConnection(options);
 
-    return databaseConnection.database.addRow(table, row);
+    const id = await databaseConnection.database.addRow(table, row);
+
+    this.emit("add-row", {
+      type: "add-row",
+      database: options.database,
+      table,
+      row: {
+        ...row,
+        id,
+      },
+    });
   }
 
   /**
@@ -285,7 +324,14 @@ export class ApiController {
   ): Promise<void> {
     const databaseConnection = await this.getDatabaseConnection(options);
 
-    return databaseConnection.database.updateRow(table, row, where);
+    await databaseConnection.database.updateRow(table, row, where);
+
+    this.emit("update-row", {
+      type: "update-row",
+      database: options.database,
+      table,
+      row,
+    });
   }
 
   /**
@@ -304,7 +350,16 @@ export class ApiController {
   ): Promise<void> {
     const databaseConnection = await this.getDatabaseConnection(options);
 
-    return databaseConnection.database.deleteRow(table, where);
+    const rows = await databaseConnection.database.getRows(table, where);
+    const row = rows[0];
+    await databaseConnection.database.deleteRow(table, where);
+
+    this.emit("delete-row", {
+      type: "delete-row",
+      database: options.database,
+      table,
+      row,
+    });
   }
 
   /**
@@ -333,5 +388,17 @@ export class ApiController {
     this.eventListeners[eventName] = this.eventListeners[eventName].filter(
       (eventListener) => eventListener !== listener
     );
+  }
+
+  /**
+   * Emits an event to all the listeners.
+   *
+   * @param eventName - The name of the event to emit.
+   * @param data - The data to emit.
+   */
+  private emit<T extends ApiEvent>(eventName: EventName, data?: T): void {
+    this.eventListeners[eventName].forEach((listener) => {
+      listener(data);
+    });
   }
 }

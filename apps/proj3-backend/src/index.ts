@@ -7,8 +7,10 @@ import type {
   DeleteColumnEvent,
   AddTableEvent,
   DeleteTableEvent,
+  UpdateRowEvent,
+  DeleteRowEvent,
 } from "types";
-import { routes } from "types";
+import { AddRowEvent, routes } from "types";
 import { v4 as uuidv4 } from "uuid";
 import type WebSocket from "ws";
 import { WebSocketServer } from "ws";
@@ -325,14 +327,14 @@ apiController.on<AddTableEvent>("add-table", (data) => {
     return;
   }
 
-  const { table } = data;
+  const { database, table } = data;
 
   logger.debug(
     `Sending add-table event to ${webSocketConnections.size} clients`
   );
 
   broadcast<AddTableEvent>(
-    { type: "add-table", table },
+    { type: "add-table", database, table },
     Array.from(webSocketConnections.values())
   );
 });
@@ -342,14 +344,14 @@ apiController.on<DeleteTableEvent>("delete-table", (data) => {
     return;
   }
 
-  const { table } = data;
+  const { database, table } = data;
 
   logger.debug(
     `Sending delete-table event to ${webSocketConnections.size} clients`
   );
 
   broadcast<DeleteTableEvent>(
-    { type: "delete-table", table },
+    { type: "delete-table", database, table },
     Array.from(webSocketConnections.values())
   );
 });
@@ -363,10 +365,10 @@ apiController.on<AddColumnEvent>("add-column", (data) => {
     `Sending add-column event to ${webSocketConnections.size} clients`
   );
 
-  const { table, column } = data;
+  const { database, table, column } = data;
 
   broadcast<AddColumnEvent>(
-    { type: "add-column", table, column },
+    { type: "add-column", database, table, column },
     Array.from(webSocketConnections.values())
   );
 });
@@ -380,10 +382,59 @@ apiController.on<DeleteColumnEvent>("delete-column", (data) => {
     `Sending delete-column event to ${webSocketConnections.size} clients`
   );
 
-  const { table, column } = data;
+  const { database, table, column } = data;
 
   broadcast<DeleteColumnEvent>(
-    { type: "delete-column", table, column },
+    { type: "delete-column", database, table, column },
+    Array.from(webSocketConnections.values())
+  );
+});
+
+apiController.on<AddRowEvent>("add-row", (data) => {
+  if (!data) {
+    return;
+  }
+
+  logger.debug(`Sending add-row event to ${webSocketConnections.size} clients`);
+
+  const { database, table, row } = data;
+
+  broadcast<AddRowEvent>(
+    { type: "add-row", database, table, row },
+    Array.from(webSocketConnections.values())
+  );
+});
+
+apiController.on<UpdateRowEvent>("update-row", (data) => {
+  if (!data) {
+    return;
+  }
+
+  logger.debug(
+    `Sending update-row event to ${webSocketConnections.size} clients`
+  );
+
+  const { database, table, row } = data;
+
+  broadcast<UpdateRowEvent>(
+    { type: "update-row", database, table, row },
+    Array.from(webSocketConnections.values())
+  );
+});
+
+apiController.on<DeleteRowEvent>("delete-row", (data) => {
+  if (!data) {
+    return;
+  }
+
+  logger.debug(
+    `Sending delete-row event to ${webSocketConnections.size} clients`
+  );
+
+  const { database, table, row } = data;
+
+  broadcast<DeleteRowEvent>(
+    { type: "delete-row", database, table, row },
     Array.from(webSocketConnections.values())
   );
 });
