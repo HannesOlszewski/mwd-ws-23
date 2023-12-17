@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { DatabaseService } from '../database.service';
+import { DatabaseService, Table } from '../database.service';
 
 @Component({
   selector: 'app-database-tables',
@@ -8,7 +8,8 @@ import { DatabaseService } from '../database.service';
 })
 export class DatabaseTablesComponent {
   databaseName?: string;
-  tables: string[] = [];
+  tables: Table[] = [];
+  displayedTableColumns: string[] = ['name', 'numColumns', 'numRows'];
 
   constructor(private databaseService: DatabaseService) {}
 

@@ -4,6 +4,12 @@ import { Observable } from 'rxjs';
 
 const baseUrl = 'http://localhost:3000';
 
+export interface Table {
+  name: string;
+  numColumns: number;
+  numRows: number;
+}
+
 export interface Column {
   name: string;
   type: string;
@@ -21,7 +27,7 @@ interface DatabasesResponse {
 
 interface TablesResponse {
   status: string;
-  data: string[];
+  data: Table[];
 }
 
 interface ColumnsResponse {
@@ -56,10 +62,7 @@ export class DatabaseService {
     );
   }
 
-  getRows(
-    database: string,
-    table: string,
-  ): Observable<RowsResponse> {
+  getRows(database: string, table: string): Observable<RowsResponse> {
     return this.http.get<RowsResponse>(
       `${baseUrl}/databases/${database}/schemas/default/tables/${table}/rows`,
     );
