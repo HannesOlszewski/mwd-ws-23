@@ -11,6 +11,10 @@ interface Breadcrumb {
   templateUrl: './breadcrumbs.component.html',
   styleUrl: './breadcrumbs.component.css',
 })
+/**
+ * Represents the BreadcrumbsComponent class.
+ * This component is responsible for displaying breadcrumbs based on the current URL.
+ */
 export class BreadcrumbsComponent implements OnInit {
   breadcrumbs: Breadcrumb[] = [];
 
@@ -21,6 +25,9 @@ export class BreadcrumbsComponent implements OnInit {
     this.router.events.subscribe(() => this.updateBreadcrumbs());
   }
 
+  /**
+   * Updates the breadcrumbs based on the current router URL.
+   */
   private updateBreadcrumbs(): void {
     const { url } = this.router;
 

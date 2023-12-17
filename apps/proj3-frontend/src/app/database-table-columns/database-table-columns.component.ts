@@ -9,6 +9,9 @@ import { DatabaseTableColumnDeleteDialogComponent } from '../database-table-colu
   templateUrl: './database-table-columns.component.html',
   styleUrl: './database-table-columns.component.css',
 })
+/**
+ * Represents a component that displays the columns of a database table.
+ */
 export class DatabaseTableColumnsComponent implements OnInit {
   databaseName?: string;
   tableName?: string;
@@ -61,6 +64,12 @@ export class DatabaseTableColumnsComponent implements OnInit {
     });
   }
 
+  /**
+   * Opens a dialog to create a new column in the database table.
+   * If the database name or table name is not provided, the function returns early.
+   * The dialog allows the user to enter the column details such as name, type, nullability, primary key, and uniqueness.
+   * After the dialog is closed, the function creates the column using the provided details by calling the database service.
+   */
   openNewColumnDialog() {
     if (!this.databaseName || !this.tableName) {
       return;
@@ -89,6 +98,11 @@ export class DatabaseTableColumnsComponent implements OnInit {
     });
   }
 
+  /**
+   * Opens a dialog to delete a column from the database table.
+   * 
+   * @param column - The name of the column to be deleted.
+   */
   openDeleteColumnDialog(column: string) {
     if (!this.databaseName || !this.tableName) {
       return;

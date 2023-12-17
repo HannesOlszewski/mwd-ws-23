@@ -7,12 +7,21 @@ import { Router } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
+/**
+ * Represents the root component of the application.
+ */
 export class AppComponent implements OnInit {
   title = 'proj3-frontend';
   databases: string[] = [];
 
-  constructor(private databaseService: DatabaseService, private router: Router) {}
+  constructor(
+    private databaseService: DatabaseService,
+    private router: Router,
+  ) {}
 
+  /**
+   * Retrieves the list of databases from the database service.
+   */
   getDatabases(): void {
     this.databaseService
       .getDatabases()
@@ -23,6 +32,11 @@ export class AppComponent implements OnInit {
     this.getDatabases();
   }
 
+  /**
+   * Checks if the specified database is the active database.
+   * @param database - The name of the database.
+   * @returns True if the specified database is the active database, false otherwise.
+   */
   isActiveDatabase(database: string): boolean {
     return this.router.url.startsWith(`/databases/${database}`);
   }

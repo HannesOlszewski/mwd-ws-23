@@ -11,6 +11,9 @@ export interface DialogData {
   templateUrl: './database-table-column-new-dialog.component.html',
   styleUrl: './database-table-column-new-dialog.component.css',
 })
+/**
+ * Represents a dialog component for creating a new database table column.
+ */
 export class DatabaseTableColumnNewDialogComponent {
   columnName: string = '';
   columnType: 'INTEGER' | 'TEXT' = 'TEXT';
@@ -21,10 +24,18 @@ export class DatabaseTableColumnNewDialogComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 
+  /**
+   * Handles the change event when the column type is selected.
+   * @param event - The change event object.
+   */
   onTypeChange(event: any) {
     this.columnType = event.value;
   }
 
+  /**
+   * Gets the result of the dialog.
+   * @returns An object containing the database name, table name, column name, column type, nullable flag, primary key flag, and unique flag.
+   */
   getResult() {
     return {
       databaseName: this.data.databaseName,

@@ -5,4 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './databases.component.html',
   styleUrl: './databases.component.css',
 })
+/**
+ * Represents the DatabasesComponent class.
+ */
 export class DatabasesComponent {}

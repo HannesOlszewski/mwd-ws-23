@@ -10,6 +10,9 @@ import { DatabaseTableRowEditDialogComponent } from '../database-table-row-edit-
   templateUrl: './database-table-rows.component.html',
   styleUrl: './database-table-rows.component.css',
 })
+/**
+ * Represents a component that displays the rows of a database table.
+ */
 export class DatabaseTableRowsComponent implements OnInit {
   databaseName?: string;
   tableName?: string;
@@ -86,6 +89,13 @@ export class DatabaseTableRowsComponent implements OnInit {
     });
   }
 
+  /**
+   * Opens a dialog for creating a new row in the database table.
+   * If the database name or table name is not provided, the function returns early.
+   * The dialog displays the provided database name, table name, and columns.
+   * After the dialog is closed, the function creates a new row in the database table
+   * using the provided database name, table name, and the result from the dialog.
+   */
   openNewRowDialog() {
     if (!this.databaseName || !this.tableName) {
       return;
@@ -113,6 +123,11 @@ export class DatabaseTableRowsComponent implements OnInit {
     });
   }
 
+  /**
+   * Opens the edit row dialog for the specified row.
+   *
+   * @param row - The row to be edited.
+   */
   openEditRowDialog(row: Row) {
     if (!this.databaseName || !this.tableName || !('id' in row)) {
       return;
@@ -141,6 +156,11 @@ export class DatabaseTableRowsComponent implements OnInit {
     });
   }
 
+  /**
+   * Opens a dialog for deleting a row from the database table.
+   *
+   * @param row - The row to be deleted.
+   */
   openDeleteRowDialog(row: Row) {
     if (!this.databaseName || !this.tableName || !('id' in row)) {
       return;

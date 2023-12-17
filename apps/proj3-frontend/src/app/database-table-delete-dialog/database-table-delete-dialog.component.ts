@@ -11,6 +11,9 @@ export interface DialogData {
   templateUrl: './database-table-delete-dialog.component.html',
   styleUrl: './database-table-delete-dialog.component.css',
 })
+/**
+ * Represents a dialog component for deleting a database table.
+ */
 export class DatabaseTableDeleteDialogComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 }

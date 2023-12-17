@@ -12,6 +12,9 @@ import { DatabaseTablesComponent } from './database-tables/database-tables.compo
 import { DatabaseTableColumnsComponent } from './database-table-columns/database-table-columns.component';
 import { DatabaseTableRowsComponent } from './database-table-rows/database-table-rows.component';
 
+/**
+ * Defines the routes for the application.
+ */
 const appRoutes: Routes = [
   {
     path: 'databases',
@@ -49,4 +52,7 @@ const appRoutes: Routes = [
   exports: [RouterModule],
   providers: [provideRouter(appRoutes, withComponentInputBinding())],
 })
+/**
+ * The AppRoutingModule class handles the routing configuration for the application.
+ */
 export class AppRoutingModule {}

@@ -6,6 +6,9 @@ import { ApiEvent, DatabaseService } from '../database.service';
   templateUrl: './api-event-log.component.html',
   styleUrl: './api-event-log.component.css',
 })
+/**
+ * Represents a component that displays a log of API events.
+ */
 export class ApiEventLogComponent {
   apiEvents: ApiEvent[] = [];
 

@@ -9,6 +9,9 @@ import { DatabaseTableDeleteDialogComponent } from '../database-table-delete-dia
   templateUrl: './database-tables.component.html',
   styleUrl: './database-tables.component.css',
 })
+/**
+ * Represents a component that displays the tables of a database.
+ */
 export class DatabaseTablesComponent {
   databaseName?: string;
   tables: Table[] = [];
@@ -48,6 +51,9 @@ export class DatabaseTablesComponent {
     });
   }
 
+  /**
+   * Opens a dialog for creating a new database table.
+   */
   openNewTableDialog() {
     const dialogRef = this.dialog.open(DatabaseTableNewDialogComponent, {
       data: {
@@ -65,6 +71,11 @@ export class DatabaseTablesComponent {
     });
   }
 
+  /**
+   * Opens a dialog to delete a table from the database.
+   *
+   * @param table - The name of the table to delete.
+   */
   openDeleteTableDialog(table: string) {
     if (!this.databaseName) {
       return;

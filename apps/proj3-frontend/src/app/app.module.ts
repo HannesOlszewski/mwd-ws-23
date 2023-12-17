@@ -70,4 +70,7 @@ import { ApiEventLogComponent } from './api-event-log/api-event-log.component';
   ],
   bootstrap: [AppComponent],
 })
+/**
+ * Represents the root module of the application.
+ */
 export class AppModule {}

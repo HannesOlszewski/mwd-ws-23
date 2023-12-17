@@ -13,6 +13,9 @@ export interface DialogData {
   templateUrl: './database-table-row-new-dialog.component.html',
   styleUrl: './database-table-row-new-dialog.component.css',
 })
+/**
+ * Represents a dialog component for creating a new row in a database table.
+ */
 export class DatabaseTableRowNewDialogComponent {
   row: Row = {};
 
@@ -33,10 +36,22 @@ export class DatabaseTableRowNewDialogComponent {
     });
   }
 
+  /**
+   * Handles the change event of a field in the database table row new dialog.
+   * Updates the value of the specified column in the row object.
+   *
+   * @param event - The change event object.
+   * @param column - The column object representing the field being changed.
+   */
   onFieldChange(event: any, column: Column) {
     this.row[column.name] = event.target.value;
   }
 
+  /**
+   * Returns the input type based on the column type.
+   * @param column The column object.
+   * @returns The input type as a string.
+   */
   getInputType(column: Column) {
     switch (column.type) {
       case 'INTEGER':
@@ -48,11 +63,24 @@ export class DatabaseTableRowNewDialogComponent {
     }
   }
 
-  getColumnsToDisplay() {
+  /**
+   * Returns an array of columns to display in the table row new dialog.
+   * Filters out columns that are marked as primary keys.
+   *
+   * @returns {Column[]} An array of columns to display.
+   */
+  getColumnsToDisplay(): Column[] {
     return this.data.columns.filter((column) => !column.primaryKey);
   }
 
-  isFormValid() {
+  /**
+   * Checks if the form is valid.
+   * The form is considered valid if all non-nullable fields are filled.
+   * Nullable fields are allowed to be empty.
+   *
+   * @returns {boolean} True if the form is valid, false otherwise.
+   */
+  isFormValid(): boolean {
     return Object.keys(this.row).every((key) => {
       return (
         this.row[key] !== '' ||
@@ -61,6 +89,10 @@ export class DatabaseTableRowNewDialogComponent {
     });
   }
 
+  /**
+   * Retrieves the result of the database table row new dialog.
+   * @returns An object containing the database name, table name, and row data.
+   */
   getResult() {
     return {
       databaseName: this.data.databaseName,
