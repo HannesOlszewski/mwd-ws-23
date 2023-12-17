@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AppRoutingModule } from './app-routing.module';
 import { DatabasesComponent } from './databases/databases.component';
+import { DatabaseTablesComponent } from './database-tables/database-tables.component';
 
 @NgModule({
   imports: [
@@ -23,7 +24,12 @@ import { DatabasesComponent } from './databases/databases.component';
     MatListModule,
     MatSidenavModule,
   ],
-  declarations: [AppComponent, PageNotFoundComponent, DatabasesComponent],
+  declarations: [
+    AppComponent,
+    PageNotFoundComponent,
+    DatabasesComponent,
+    DatabaseTablesComponent,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

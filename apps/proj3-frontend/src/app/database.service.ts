@@ -18,4 +18,10 @@ export class DatabaseService {
   getDatabases(): Observable<DatabasesResponse> {
     return this.http.get<DatabasesResponse>(`${baseUrl}/databases`);
   }
+
+  getTables(database: string): Observable<DatabasesResponse> {
+    return this.http.get<DatabasesResponse>(
+      `${baseUrl}/databases/${database}/schemas/default/tables`,
+    );
+  }
 }

@@ -1,0 +1,10 @@
+<p>
+  Showing tables of <strong>{{ databaseName }}</strong>
+</p>
+<mat-nav-list>
+  @for (table of tables; track table) {
+  <a mat-list-item href="/databases/{{ databaseName }}/{{ table }}">{{
+    table
+  }}</a>
+  }
+</mat-nav-list>
