@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from './database.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,7 @@ export class AppComponent implements OnInit {
   title = 'proj3-frontend';
   databases: string[] = [];
 
-  constructor(private databaseService: DatabaseService) {}
+  constructor(private databaseService: DatabaseService, private router: Router) {}
 
   getDatabases(): void {
     this.databaseService
@@ -20,5 +21,9 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.getDatabases();
+  }
+
+  isActiveDatabase(database: string): boolean {
+    return this.router.url.startsWith(`/databases/${database}`);
   }
 }
