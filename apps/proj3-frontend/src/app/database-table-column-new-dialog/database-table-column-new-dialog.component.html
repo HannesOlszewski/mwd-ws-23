@@ -26,6 +26,16 @@
         }}</mat-option>
       </mat-select>
     </mat-form-field>
+    <mat-slide-toggle
+      [(ngModel)]="isNullable"
+      name="isNullable"
+      color="primary"
+    >
+      Nullable
+    </mat-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="isUnique" name="isUnique" color="primary">
+      Unique
+    </mat-slide-toggle>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

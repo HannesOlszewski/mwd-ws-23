@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
@@ -26,6 +27,8 @@ import { DatabaseTableNewDialogComponent } from './database-table-new-dialog/dat
 import { DatabaseTableDeleteDialogComponent } from './database-table-delete-dialog/database-table-delete-dialog.component';
 import { DatabaseTableColumnNewDialogComponent } from './database-table-column-new-dialog/database-table-column-new-dialog.component';
 import { DatabaseTableColumnDeleteDialogComponent } from './database-table-column-delete-dialog/database-table-column-delete-dialog.component';
+import { DatabaseTableRowNewDialogComponent } from './database-table-row-new-dialog/database-table-row-new-dialog.component';
+import { DatabaseTableRowDeleteDialogComponent } from './database-table-row-delete-dialog/database-table-row-delete-dialog.component';
 
 @NgModule({
   imports: [
@@ -44,6 +47,7 @@ import { DatabaseTableColumnDeleteDialogComponent } from './database-table-colum
     MatInputModule,
     MatOptionModule,
     MatSelectModule,
+    MatSlideToggleModule,
   ],
   declarations: [
     AppComponent,
@@ -57,6 +61,8 @@ import { DatabaseTableColumnDeleteDialogComponent } from './database-table-colum
     DatabaseTableDeleteDialogComponent,
     DatabaseTableColumnNewDialogComponent,
     DatabaseTableColumnDeleteDialogComponent,
+    DatabaseTableRowNewDialogComponent,
+    DatabaseTableRowDeleteDialogComponent,
   ],
   bootstrap: [AppComponent],
 })
