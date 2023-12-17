@@ -1,4 +1,9 @@
-<h2>{{ databaseName }}</h2>
+<div class="page-title">
+  <a mat-icon-button routerLink="/databases" aria-label="Go back to databases">
+    <mat-icon>arrow_left</mat-icon>
+  </a>
+  <h2>{{ databaseName }}</h2>
+</div>
 <h3>Tables</h3>
 <table mat-table [dataSource]="tables" class="mat-elevation-z8">
   <ng-container matColumnDef="name">

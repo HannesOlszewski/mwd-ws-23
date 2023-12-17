@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
 
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
@@ -28,6 +29,7 @@ import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
     MatListModule,
     MatSidenavModule,
     MatTableModule,
+    MatIconModule,
   ],
   declarations: [
     AppComponent,

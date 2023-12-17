@@ -1,5 +1,15 @@
-<h2>{{ tableName }} ({{ databaseName }})</h2>
+<div class="page-title">
+  <a
+    mat-icon-button
+    routerLink="/databases/{{ databaseName }}"
+    aria-label="Go back to tables"
+  >
+    <mat-icon>arrow_left</mat-icon>
+  </a>
+  <h2>{{ tableName }} ({{ databaseName }})</h2>
+</div>
 
+<h3>Columns</h3>
 <table mat-table [dataSource]="columns" class="mat-elevation-z8">
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>
