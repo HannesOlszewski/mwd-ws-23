@@ -4,6 +4,7 @@ import type {
   Database,
   DatabaseOptions,
   EventName,
+  Table,
 } from "types";
 import { DatabaseFactory } from "../database/factory";
 import { Logger } from "../utils/logger";
@@ -125,7 +126,7 @@ export class ApiController {
    *
    * @returns A promise that resolves to an array of table names.
    */
-  async getTables(options: DatabaseOptions): Promise<string[]> {
+  async getTables(options: DatabaseOptions): Promise<Table[]> {
     const databaseConnection = await this.getDatabaseConnection(options);
 
     return databaseConnection.database.getTables();

@@ -91,7 +91,11 @@ describe("SqliteDatabase", () => {
 
     const newTables = await database.getTables();
 
-    expect(newTables).toEqual(["table1", "table2", "table3"]);
+    expect(newTables).toEqual([
+      { name: "table1", numColumns: 1, numRows: 0 },
+      { name: "table2", numColumns: 1, numRows: 0 },
+      { name: "table3", numColumns: 1, numRows: 0 },
+    ]);
   });
 
   it("should create a table in the database", async () => {
@@ -106,7 +110,7 @@ describe("SqliteDatabase", () => {
 
     const tables = await database.getTables();
 
-    expect(tables).toContain("users");
+    expect(tables).toContain({ name: "users", numColumns: 3, numRows: 0 });
   });
 
   it("should throw an error when trying to create a table with no columns", async () => {
@@ -146,7 +150,7 @@ describe("SqliteDatabase", () => {
     await database.deleteTable("users");
     const tables = await database.getTables();
 
-    expect(tables).not.toContain("users");
+    expect(tables).not.toContain({ name: "users", numColumns: 3, numRows: 0 });
   });
 
   it("should get the list of columns in a table", async () => {

@@ -48,7 +48,9 @@ describe("ApiController", () => {
 
     const tables = await apiController.getTables(options);
 
-    expect(tables).toEqual(expect.arrayContaining(["users"]));
+    expect(tables).toEqual(
+      expect.arrayContaining([{ name: "users", numColumns: 1, numRows: 0 }])
+    );
   });
 
   it("should create a table", async () => {
@@ -60,7 +62,9 @@ describe("ApiController", () => {
     await apiController.createTable(options, name, columns);
     const tables = await apiController.getTables(options);
 
-    expect(tables).toEqual(expect.arrayContaining([name]));
+    expect(tables).toEqual(
+      expect.arrayContaining([{ name, numColumns: 1, numRows: 0 }])
+    );
   });
 
   it("should delete a table", async () => {
@@ -73,7 +77,9 @@ describe("ApiController", () => {
     await apiController.deleteTable(options, name);
     const tables = await apiController.getTables(options);
 
-    expect(tables).not.toEqual(expect.arrayContaining([name]));
+    expect(tables).not.toEqual(
+      expect.arrayContaining([{ name, numColumns: 1, numRows: 0 }])
+    );
   });
 
   it("should retrieve columns", async () => {

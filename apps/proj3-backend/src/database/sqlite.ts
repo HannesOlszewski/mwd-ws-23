@@ -2,7 +2,13 @@ import fs from "node:fs";
 import { Database as Sqlite3Database } from "sqlite3";
 import type { Database as SqliteDatabaseType } from "sqlite";
 import { open } from "sqlite";
-import type { Column, ColumnType, Database, DatabaseOptions } from "types";
+import type {
+  Column,
+  ColumnType,
+  Database,
+  DatabaseOptions,
+  Table,
+} from "types";
 import { Logger } from "../utils/logger";
 
 /**
@@ -94,7 +100,7 @@ export class SqliteDatabase implements Database {
     return schemas.map((schema) => schema.name);
   }
 
-  async getTables(): Promise<string[]> {
+  async getTables(): Promise<Table[]> {
     if (!this.db) {
       this.logger.error("No connection to SQLite database");
       throw new Error("No connection to SQLite database");
@@ -105,7 +111,18 @@ export class SqliteDatabase implements Database {
     this.logger.debug(query);
     const tables = await this.db.all<{ name: string }[]>(query);
 
-    return tables.map((table) => table.name);
+    return Promise.all(
+      tables.map(async (table) => ({
+        name: table.name,
+        numColumns: (await this.getColumns(table.name)).length,
+        numRows:
+          (
+            await this.db?.get<{ "COUNT(*)": number }>(
+              `SELECT COUNT(*) FROM ${table.name}`
+            )
+          )?.["COUNT(*)"] ?? 0,
+      }))
+    );
   }
 
   async createTable(name: string, columns: Column[]): Promise<void> {
