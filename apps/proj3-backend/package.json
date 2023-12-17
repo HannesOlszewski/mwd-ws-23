@@ -10,7 +10,11 @@
     "build": "tsc",
     "lint": "tsc --noEmit && eslint 'src/**/*.ts' && prettier --check 'src/**/*.ts'",
     "format": "eslint 'src/**/*.ts' --fix && prettier --write 'src/**/*.ts'",
-    "test": "jest"
+    "test": "jest",
+    "sqlite:create-database": "ts-node scripts/create-database.ts",
+    "sqlite:create-table": "ts-node scripts/create-table.ts",
+    "sqlite:create-column": "ts-node scripts/create-column.ts",
+    "sqlite:create-row": "ts-node scripts/create-row.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",
