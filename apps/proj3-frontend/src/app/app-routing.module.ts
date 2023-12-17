@@ -10,6 +10,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { DatabasesComponent } from './databases/databases.component';
 import { DatabaseTablesComponent } from './database-tables/database-tables.component';
 import { DatabaseTableColumnsComponent } from './database-table-columns/database-table-columns.component';
+import { DatabaseTableRowsComponent } from './database-table-rows/database-table-rows.component';
 
 const appRoutes: Routes = [
   {
@@ -20,7 +21,13 @@ const appRoutes: Routes = [
         children: [
           {
             path: ':table',
-            component: DatabaseTableColumnsComponent,
+            children: [
+              {
+                path: 'columns',
+                component: DatabaseTableColumnsComponent,
+              },
+              { path: 'rows', component: DatabaseTableRowsComponent },
+            ],
           },
           { path: '', component: DatabaseTablesComponent },
         ],

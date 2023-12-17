@@ -12,6 +12,8 @@ export interface Column {
   unique: boolean;
 }
 
+export type Row = Record<string, unknown>;
+
 interface DatabasesResponse {
   status: string;
   data: string[];
@@ -25,6 +27,11 @@ interface TablesResponse {
 interface ColumnsResponse {
   status: string;
   data: Column[];
+}
+
+interface RowsResponse {
+  status: string;
+  data: Row[];
 }
 
 @Injectable({
@@ -46,6 +53,15 @@ export class DatabaseService {
   getColumns(database: string, table: string): Observable<ColumnsResponse> {
     return this.http.get<ColumnsResponse>(
       `${baseUrl}/databases/${database}/schemas/default/tables/${table}/columns`,
+    );
+  }
+
+  getRows(
+    database: string,
+    table: string,
+  ): Observable<RowsResponse> {
+    return this.http.get<RowsResponse>(
+      `${baseUrl}/databases/${database}/schemas/default/tables/${table}/rows`,
     );
   }
 }
