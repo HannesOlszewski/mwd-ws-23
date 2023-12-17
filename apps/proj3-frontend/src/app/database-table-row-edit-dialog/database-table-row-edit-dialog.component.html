@@ -1,0 +1,32 @@
+<h1 mat-dialog-title>
+  Update row in {{ data.tableName }} ({{ data.databaseName }})
+</h1>
+<mat-dialog-content>
+  <form class="dialog-form">
+    @for(column of getColumnsToDisplay(); track column) {
+    <mat-form-field>
+      <mat-label>{{ column.name }}</mat-label>
+      <input
+        matInput
+        [(ngModel)]="row[column.name]"
+        name="{{ column.name }}"
+        [type]="getInputType(column)"
+        [required]="column.nullable === false"
+        (change)="onFieldChange($event, column)"
+      />
+    </mat-form-field>
+    }
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    mat-button
+    [mat-dialog-close]="getResult()"
+    [disabled]="!isFormValid()"
+    color="primary"
+    cdkFocusInitial
+  >
+    Save
+  </button>
+</mat-dialog-actions>

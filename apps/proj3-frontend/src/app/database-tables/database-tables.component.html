@@ -1,0 +1,57 @@
+<div class="page-title">
+  <a mat-icon-button routerLink="/databases" aria-label="Go back to databases">
+    <mat-icon>arrow_left</mat-icon>
+  </a>
+  <h2>{{ databaseName }}</h2>
+</div>
+
+<h3>Tables</h3>
+
+<div class="page-actions">
+  <button mat-raised-button color="primary" (click)="openNewTableDialog()">
+    <mat-icon>add</mat-icon>
+    New Table
+  </button>
+</div>
+
+<table mat-table [dataSource]="tables" class="mat-elevation-z8">
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Table</th>
+    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="numColumns">
+    <th mat-header-cell *matHeaderCellDef>Columns</th>
+    <td mat-cell *matCellDef="let element">
+      <a routerLink="/databases/{{ databaseName }}/{{ element.name }}/columns">
+        {{ element.numColumns }}
+      </a>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="numRows">
+    <th mat-header-cell *matHeaderCellDef>Rows</th>
+    <td mat-cell *matCellDef="let element">
+      <a routerLink="/databases/{{ databaseName }}/{{ element.name }}/rows">
+        {{ element.numRows }}
+      </a>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <td mat-cell *matCellDef="let element">
+      <button
+        mat-icon-button
+        color="warn"
+        (click)="openDeleteTableDialog(element.name)"
+        aria-label="Delete table"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedTableColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedTableColumns"></tr>
+</table>

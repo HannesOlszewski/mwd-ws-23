@@ -1,0 +1,12 @@
+.page-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.page-actions {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
