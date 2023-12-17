@@ -3,7 +3,7 @@
     <h1>FHKielMyAdmin</h1>
     <mat-nav-list>
       @for (database of databases; track database) {
-      <a mat-list-item href="/databases/{{ database }}">{{ database }}</a>
+      <a mat-list-item routerLink="/databases/{{ database }}">{{ database }}</a>
       }
     </mat-nav-list>
   </mat-drawer>

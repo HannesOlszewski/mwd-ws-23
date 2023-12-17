@@ -3,8 +3,11 @@
 </p>
 <mat-nav-list>
   @for (table of tables; track table) {
-  <a mat-list-item href="/databases/{{ databaseName }}/{{ table }}/columns">{{
-    table
-  }}</a>
+  <a
+    mat-list-item
+    routerLink="/databases/{{ databaseName }}/{{ table }}/columns"
+  >
+    {{ table }}
+  </a>
   }
 </mat-nav-list>
