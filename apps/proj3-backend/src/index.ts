@@ -1,3 +1,4 @@
+import cors from "cors";
 import express, { json } from "express";
 import type {
   AddColumnEvent,
@@ -23,6 +24,7 @@ import { broadcast } from "./utils/websocket";
 
 const app = express();
 app.use(json());
+app.use(cors());
 const port = 3000;
 const logger = new Logger("app");
 const apiController = new ApiController();
