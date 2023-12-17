@@ -10,6 +10,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AppRoutingModule } from './app-routing.module';
+import { DatabasesComponent } from './databases/databases.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,7 @@ import { AppRoutingModule } from './app-routing.module';
     MatListModule,
     MatSidenavModule,
   ],
-  declarations: [AppComponent, PageNotFoundComponent],
+  declarations: [AppComponent, PageNotFoundComponent, DatabasesComponent],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
