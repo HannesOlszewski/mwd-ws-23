@@ -102,9 +102,59 @@ export class DatabaseService {
     );
   }
 
+  createColumn(
+    database: string,
+    table: string,
+    column: Column,
+  ): Observable<EmptyMutationResponse> {
+    return this.http.post<EmptyMutationResponse>(
+      `${baseUrl}/databases/${database}/schemas/default/tables/${table}/columns`,
+      column,
+    );
+  }
+
+  deleteColumn(
+    database: string,
+    table: string,
+    column: string,
+  ): Observable<EmptyMutationResponse> {
+    return this.http.delete<EmptyMutationResponse>(
+      `${baseUrl}/databases/${database}/schemas/default/tables/${table}/columns`,
+      {
+        body: {
+          name: column,
+        },
+      },
+    );
+  }
+
   getRows(database: string, table: string): Observable<RowsResponse> {
     return this.http.get<RowsResponse>(
       `${baseUrl}/databases/${database}/schemas/default/tables/${table}/rows`,
+    );
+  }
+
+  createRow(
+    database: string,
+    table: string,
+    row: Row,
+  ): Observable<EmptyMutationResponse> {
+    return this.http.post<EmptyMutationResponse>(
+      `${baseUrl}/databases/${database}/schemas/default/tables/${table}/rows`,
+      row,
+    );
+  }
+
+  deleteRow(
+    database: string,
+    table: string,
+    row: Row,
+  ): Observable<EmptyMutationResponse> {
+    return this.http.delete<EmptyMutationResponse>(
+      `${baseUrl}/databases/${database}/schemas/default/tables/${table}/rows`,
+      {
+        body: row,
+      },
     );
   }
 }
