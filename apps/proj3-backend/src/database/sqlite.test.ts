@@ -110,7 +110,8 @@ describe("SqliteDatabase", () => {
 
     const tables = await database.getTables();
 
-    expect(tables).toContain({ name: "users", numColumns: 3, numRows: 0 });
+    expect(tables).toHaveLength(1);
+    expect(tables).toContainEqual({ name: "users", numColumns: 3, numRows: 0 });
   });
 
   it("should throw an error when trying to create a table with no columns", async () => {
