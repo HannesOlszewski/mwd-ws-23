@@ -145,6 +145,20 @@ export class DatabaseService {
     );
   }
 
+  updateRow(
+    database: string,
+    table: string,
+    row: Row,
+  ): Observable<EmptyMutationResponse> {
+    return this.http.put<EmptyMutationResponse>(
+      `${baseUrl}/databases/${database}/schemas/default/tables/${table}/rows`,
+      {
+        row,
+        where: `id=${row['id'] ?? -1}`,
+      },
+    );
+  }
+
   deleteRow(
     database: string,
     table: string,

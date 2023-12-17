@@ -3,6 +3,7 @@ import { Column, DatabaseService, Row } from '../database.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DatabaseTableRowDeleteDialogComponent } from '../database-table-row-delete-dialog/database-table-row-delete-dialog.component';
 import { DatabaseTableRowNewDialogComponent } from '../database-table-row-new-dialog/database-table-row-new-dialog.component';
+import { DatabaseTableRowEditDialogComponent } from '../database-table-row-edit-dialog/database-table-row-edit-dialog.component';
 
 @Component({
   selector: 'app-database-table-rows',
@@ -81,6 +82,48 @@ export class DatabaseTableRowsComponent implements OnInit {
               'message' in createRowResponse
             ) {
               console.error(createRowResponse);
+              return;
+            }
+
+            this.databaseService
+              .getRows(databaseName, tableName)
+              .subscribe((response) => {
+                this.rows = response.data;
+              });
+          });
+      }
+    });
+  }
+
+  openEditRowDialog(row: Row) {
+    if (!this.databaseName || !this.tableName || !('id' in row)) {
+      return;
+    }
+
+    const databaseName = this.databaseName;
+    const tableName = this.tableName;
+    const columns = this.columns;
+
+    const dialogRef = this.dialog.open(DatabaseTableRowEditDialogComponent, {
+      data: {
+        databaseName,
+        tableName,
+        columns,
+        row,
+      },
+      minWidth: '400px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.databaseService
+          .updateRow(databaseName, tableName, result.row)
+          .subscribe((updateRowResponse) => {
+            if (
+              updateRowResponse.status === 'error' &&
+              'message' in updateRowResponse
+            ) {
+              console.error(updateRowResponse);
               return;
             }
 

@@ -28,6 +28,7 @@ import { DatabaseTableDeleteDialogComponent } from './database-table-delete-dial
 import { DatabaseTableColumnNewDialogComponent } from './database-table-column-new-dialog/database-table-column-new-dialog.component';
 import { DatabaseTableColumnDeleteDialogComponent } from './database-table-column-delete-dialog/database-table-column-delete-dialog.component';
 import { DatabaseTableRowNewDialogComponent } from './database-table-row-new-dialog/database-table-row-new-dialog.component';
+import { DatabaseTableRowEditDialogComponent } from './database-table-row-edit-dialog/database-table-row-edit-dialog.component';
 import { DatabaseTableRowDeleteDialogComponent } from './database-table-row-delete-dialog/database-table-row-delete-dialog.component';
 
 @NgModule({
@@ -62,6 +63,7 @@ import { DatabaseTableRowDeleteDialogComponent } from './database-table-row-dele
     DatabaseTableColumnNewDialogComponent,
     DatabaseTableColumnDeleteDialogComponent,
     DatabaseTableRowNewDialogComponent,
+    DatabaseTableRowEditDialogComponent,
     DatabaseTableRowDeleteDialogComponent,
   ],
   bootstrap: [AppComponent],
