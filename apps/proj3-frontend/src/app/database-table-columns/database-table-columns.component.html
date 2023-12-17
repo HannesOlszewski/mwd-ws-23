@@ -1,0 +1,31 @@
+<h2>Columns of {{ tableName }}</h2>
+
+<table mat-table [dataSource]="columns" class="mat-elevation-z8">
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="type">
+    <th mat-header-cell *matHeaderCellDef>Type</th>
+    <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="nullable">
+    <th mat-header-cell *matHeaderCellDef>Nullable</th>
+    <td mat-cell *matCellDef="let element">{{ element.nullable }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="primaryKey">
+    <th mat-header-cell *matHeaderCellDef>Primary Key</th>
+    <td mat-cell *matCellDef="let element">{{ element.primaryKey }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="unique">
+    <th mat-header-cell *matHeaderCellDef>Unique</th>
+    <td mat-cell *matCellDef="let element">{{ element.unique }}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedTableColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedTableColumns"></tr>
+</table>
