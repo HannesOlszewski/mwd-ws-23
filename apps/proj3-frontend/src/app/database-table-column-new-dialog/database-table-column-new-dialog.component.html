@@ -1,0 +1,42 @@
+<h1 mat-dialog-title>
+  Create column in {{ data.tableName }} ({{ data.databaseName }})
+</h1>
+<mat-dialog-content>
+  <form class="dialog-form">
+    <mat-form-field>
+      <mat-label>Column Name</mat-label>
+      <input
+        matInput
+        placeholder="e.g. name"
+        [(ngModel)]="columnName"
+        name="columnName"
+        required
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Type</mat-label>
+      <mat-select
+        [(ngModel)]="columnType"
+        name="columnType"
+        required
+        (selectionChange)="onTypeChange($event)"
+      >
+        <mat-option *ngFor="let type of types" [value]="type">{{
+          type
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    mat-button
+    [mat-dialog-close]="getResult()"
+    [disabled]="!columnName || columnName.length === 0"
+    color="primary"
+    cdkFocusInitial
+  >
+    Create
+  </button>
+</mat-dialog-actions>

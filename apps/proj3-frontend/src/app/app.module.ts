@@ -11,6 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
@@ -22,6 +24,8 @@ import { DatabaseTableRowsComponent } from './database-table-rows/database-table
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import { DatabaseTableNewDialogComponent } from './database-table-new-dialog/database-table-new-dialog.component';
 import { DatabaseTableDeleteDialogComponent } from './database-table-delete-dialog/database-table-delete-dialog.component';
+import { DatabaseTableColumnNewDialogComponent } from './database-table-column-new-dialog/database-table-column-new-dialog.component';
+import { DatabaseTableColumnDeleteDialogComponent } from './database-table-column-delete-dialog/database-table-column-delete-dialog.component';
 
 @NgModule({
   imports: [
@@ -38,6 +42,8 @@ import { DatabaseTableDeleteDialogComponent } from './database-table-delete-dial
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
+    MatOptionModule,
+    MatSelectModule,
   ],
   declarations: [
     AppComponent,
@@ -49,6 +55,8 @@ import { DatabaseTableDeleteDialogComponent } from './database-table-delete-dial
     BreadcrumbsComponent,
     DatabaseTableNewDialogComponent,
     DatabaseTableDeleteDialogComponent,
+    DatabaseTableColumnNewDialogComponent,
+    DatabaseTableColumnDeleteDialogComponent,
   ],
   bootstrap: [AppComponent],
 })
