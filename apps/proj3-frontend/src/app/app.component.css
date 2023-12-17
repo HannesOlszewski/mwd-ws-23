@@ -17,3 +17,13 @@
   color: #fff;
   padding: 21px;
 }
+
+.logo-text:hover {
+  background-color: #00305d;
+  color: #fff;
+}
+
+.sidenav-subheader {
+  padding-top: 24px;
+  margin-bottom: 0px;
+}

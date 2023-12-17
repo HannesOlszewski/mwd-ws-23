@@ -1,4 +1,4 @@
-<h2>Rows of {{ tableName }}</h2>
+<h2>{{ tableName }} ({{ databaseName }})</h2>
 
 <table mat-table [dataSource]="rows" class="mat-elevation-z8">
   @for(column of columns; track column) {
