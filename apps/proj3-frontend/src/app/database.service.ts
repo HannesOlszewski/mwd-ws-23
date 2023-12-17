@@ -153,7 +153,15 @@ export class DatabaseService {
     return this.http.delete<EmptyMutationResponse>(
       `${baseUrl}/databases/${database}/schemas/default/tables/${table}/rows`,
       {
-        body: row,
+        body: {
+          where: Object.entries(row)
+            .map(([column, value]) =>
+              typeof value === 'string'
+                ? `${column}="${value}"`
+                : `${column}=${value}`,
+            )
+            .join(' AND '),
+        },
       },
     );
   }
