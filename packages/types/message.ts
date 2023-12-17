@@ -29,7 +29,10 @@ export type EventName =
   | "add-table"
   | "delete-table"
   | "add-column"
-  | "delete-column";
+  | "delete-column"
+  | "add-row"
+  | "update-row"
+  | "delete-row";
 
 /**
  * Represents an event from the api.
@@ -39,6 +42,10 @@ export interface ApiEvent {
    * The type of the event.
    */
   type: EventName;
+  /**
+   * The database that the event is for.
+   */
+  database: string;
 }
 
 /**
@@ -91,4 +98,40 @@ export interface DeleteColumnEvent extends ApiEvent {
    * The name of the column that was deleted.
    */
   column: string;
+}
+
+export interface AddRowEvent extends ApiEvent {
+  type: "add-row";
+  /**
+   * The name of the table where the row was added.
+   */
+  table: string;
+  /**
+   * The row that was added.
+   */
+  row: Record<string, unknown>;
+}
+
+export interface UpdateRowEvent extends ApiEvent {
+  type: "update-row";
+  /**
+   * The name of the table where the row was updated.
+   */
+  table: string;
+  /**
+   * The row that was updated.
+   */
+  row: Record<string, unknown>;
+}
+
+export interface DeleteRowEvent extends ApiEvent {
+  type: "delete-row";
+  /**
+   * The name of the table where the row was deleted.
+   */
+  table: string;
+  /**
+   * The row that was deleted.
+   */
+  row: Record<string, unknown>;
 }
