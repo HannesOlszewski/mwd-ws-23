@@ -138,9 +138,9 @@ export interface Database {
    * @param table - The name of the table.
    * @param row - The row to add.
    *
-   * @returns A promise that resolves when the row is added.
+   * @returns A promise that resolves with the new id when the row is added.
    */
-  addRow: (table: string, row: Record<string, unknown>) => Promise<void>;
+  addRow: (table: string, row: Record<string, unknown>) => Promise<number>;
 
   /**
    * Updates a row in a table.
