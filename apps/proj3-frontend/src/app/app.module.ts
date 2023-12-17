@@ -8,6 +8,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
@@ -17,6 +20,7 @@ import { DatabaseTablesComponent } from './database-tables/database-tables.compo
 import { DatabaseTableColumnsComponent } from './database-table-columns/database-table-columns.component';
 import { DatabaseTableRowsComponent } from './database-table-rows/database-table-rows.component';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
+import { DatabaseTableNewDialogComponent } from './database-table-new-dialog/database-table-new-dialog.component';
 
 @NgModule({
   imports: [
@@ -30,6 +34,9 @@ import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
     MatSidenavModule,
     MatTableModule,
     MatIconModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   declarations: [
     AppComponent,
@@ -39,6 +46,7 @@ import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
     DatabaseTableColumnsComponent,
     DatabaseTableRowsComponent,
     BreadcrumbsComponent,
+    DatabaseTableNewDialogComponent,
   ],
   bootstrap: [AppComponent],
 })

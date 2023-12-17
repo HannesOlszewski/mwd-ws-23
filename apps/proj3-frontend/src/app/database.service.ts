@@ -40,6 +40,11 @@ interface RowsResponse {
   data: Row[];
 }
 
+interface EmptyMutationResponse {
+  status: string;
+  message?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -53,6 +58,27 @@ export class DatabaseService {
   getTables(database: string): Observable<TablesResponse> {
     return this.http.get<TablesResponse>(
       `${baseUrl}/databases/${database}/schemas/default/tables`,
+    );
+  }
+
+  createTable(
+    database: string,
+    table: string,
+  ): Observable<EmptyMutationResponse> {
+    return this.http.post<EmptyMutationResponse>(
+      `${baseUrl}/databases/${database}/schemas/default/tables`,
+      {
+        name: table,
+        columns: [
+          {
+            name: 'id',
+            type: 'INTEGER',
+            nullable: false,
+            primaryKey: true,
+            unique: true,
+          },
+        ],
+      },
     );
   }
 
