@@ -105,19 +105,18 @@ app.delete(routes.tables, (req, res) => {
     databaseName: string;
     schemaName: string;
   }>(req);
-  const { name, columns } = parseRequestData<{
+  const { name } = parseRequestData<{
     name: string;
-    columns: Column[];
   }>(req);
 
   apiController
-    .createTable({ database: databaseName }, name, columns)
+    .deleteTable({ database: databaseName }, name)
     .then(() => {
       res.send(successMessage());
     })
     .catch((error) => {
-      logger.error(`Error creating table: ${error}`);
-      res.status(500).send(errorMessage("Error creating table"));
+      logger.error(`Error deleting table: ${error}`);
+      res.status(500).send(errorMessage("Error deleting table"));
     });
 });
 
