@@ -63,7 +63,7 @@ export interface Database {
    *
    * @returns A promise that resolves with the tables in the database.
    */
-  getTables(): Promise<string[]>;
+  getTables(): Promise<Table[]>;
 
   /**
    * Creates a table in the database.
@@ -166,6 +166,24 @@ export interface Database {
    * @returns A promise that resolves when the row is deleted.
    */
   deleteRow: (table: string, where?: string) => Promise<void>;
+}
+
+/**
+ * Represents a database table.
+ */
+export interface Table {
+  /**
+   * The name of the table.
+   */
+  name: string;
+  /**
+   * The number of columns in the table.
+   */
+  numColumns: number;
+  /**
+   * The number of rows in the table.
+   */
+  numRows: number;
 }
 
 /**
