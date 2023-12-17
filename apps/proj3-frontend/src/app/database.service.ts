@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { WebsocketService } from './websocket.service';
 
 const baseUrl = 'http://localhost:3000';
 
@@ -45,11 +46,63 @@ interface EmptyMutationResponse {
   message?: string;
 }
 
+export type EventName =
+  | 'add-table'
+  | 'delete-table'
+  | 'add-column'
+  | 'delete-column';
+
+export type ApiEvent =
+  | {
+      type: 'add-table';
+      database: string;
+      table: string;
+    }
+  | {
+      type: 'delete-table';
+      database: string;
+      table: string;
+    }
+  | {
+      type: 'add-column';
+      database: string;
+      table: string;
+      column: Column;
+    }
+  | {
+      type: 'delete-column';
+      database: string;
+      table: string;
+      column: string;
+    }
+  | { type: 'add-row'; database: string; table: string; row: Row }
+  | {
+      type: 'update-row';
+      database: string;
+      table: string;
+      row: Row;
+    }
+  | {
+      type: 'delete-row';
+      database: string;
+      table: string;
+      row: Row;
+    };
+
 @Injectable({
   providedIn: 'root',
 })
 export class DatabaseService {
-  constructor(private http: HttpClient) {}
+  private apiEvents: Observable<MessageEvent<string>>;
+
+  constructor(
+    private http: HttpClient,
+    private ws: WebsocketService,
+  ) {
+    this.apiEvents = this.ws
+      .connect(`${baseUrl.replace('http', 'ws')}/ws`)
+      .asObservable();
+  }
 
   getDatabases(): Observable<DatabasesResponse> {
     return this.http.get<DatabasesResponse>(`${baseUrl}/databases`);
@@ -178,5 +231,9 @@ export class DatabaseService {
         },
       },
     );
+  }
+
+  getApiEvents(): Observable<MessageEvent<string>> {
+    return this.apiEvents;
   }
 }

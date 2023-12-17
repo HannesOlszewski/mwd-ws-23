@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Column, DatabaseService } from '../database.service';
+import { ApiEvent, Column, DatabaseService } from '../database.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DatabaseTableColumnNewDialogComponent } from '../database-table-column-new-dialog/database-table-column-new-dialog.component';
 import { DatabaseTableColumnDeleteDialogComponent } from '../database-table-column-delete-dialog/database-table-column-delete-dialog.component';
@@ -47,6 +47,18 @@ export class DatabaseTableColumnsComponent implements OnInit {
       .subscribe((response) => {
         this.columns = response.data;
       });
+
+    this.databaseService.getApiEvents().subscribe(({ data }) => {
+      const parsedData: ApiEvent = JSON.parse(data);
+
+      if (parsedData.type === 'add-column') {
+        this.columns = [...this.columns, parsedData.column];
+      } else if (parsedData.type === 'delete-column') {
+        this.columns = this.columns.filter(
+          (column) => column.name !== parsedData.column,
+        );
+      }
+    });
   }
 
   openNewColumnDialog() {
@@ -72,21 +84,7 @@ export class DatabaseTableColumnsComponent implements OnInit {
             primaryKey: result.isPrimaryKey,
             unique: result.isUnique,
           })
-          .subscribe((createColumnResponse) => {
-            if (
-              createColumnResponse.status === 'error' &&
-              'message' in createColumnResponse
-            ) {
-              console.error(createColumnResponse);
-              return;
-            }
-
-            this.databaseService
-              .getColumns(result.databaseName, result.tableName)
-              .subscribe((response) => {
-                this.columns = response.data;
-              });
-          });
+          .subscribe();
       }
     });
   }
@@ -115,21 +113,7 @@ export class DatabaseTableColumnsComponent implements OnInit {
       if (result) {
         this.databaseService
           .deleteColumn(databaseName, tableName, column)
-          .subscribe((deleteColumnResponse) => {
-            if (
-              deleteColumnResponse.status === 'error' &&
-              'message' in deleteColumnResponse
-            ) {
-              console.error(deleteColumnResponse);
-              return;
-            }
-
-            this.databaseService
-              .getColumns(databaseName, tableName)
-              .subscribe((response) => {
-                this.columns = response.data;
-              });
-          });
+          .subscribe();
       }
     });
   }

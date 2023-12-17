@@ -12,7 +12,12 @@
 <h3>Rows</h3>
 
 <div class="page-actions">
-  <button mat-raised-button color="primary" (click)="openNewRowDialog()">
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="openNewRowDialog()"
+    [disabled]="columns.length <= 1"
+  >
     <mat-icon>add</mat-icon>
     New Row
   </button>

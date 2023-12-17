@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { DatabaseService, Table } from '../database.service';
+import { ApiEvent, DatabaseService, Table } from '../database.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DatabaseTableNewDialogComponent } from '../database-table-new-dialog/database-table-new-dialog.component';
 import { DatabaseTableDeleteDialogComponent } from '../database-table-delete-dialog/database-table-delete-dialog.component';
@@ -27,8 +27,24 @@ export class DatabaseTablesComponent {
   @Input()
   set database(database: string) {
     this.databaseName = database;
+
     this.databaseService.getTables(database).subscribe((response) => {
       this.tables = response.data;
+    });
+
+    this.databaseService.getApiEvents().subscribe(({ data }) => {
+      const parsedData: ApiEvent = JSON.parse(data);
+
+      if (parsedData.type === 'add-table') {
+        this.tables = [
+          ...this.tables,
+          { name: parsedData.table, numColumns: 1, numRows: 0 },
+        ];
+      } else if (parsedData.type === 'delete-table') {
+        this.tables = this.tables.filter(
+          (table) => table.name !== parsedData.table,
+        );
+      }
     });
   }
 
@@ -44,21 +60,7 @@ export class DatabaseTablesComponent {
       if (result) {
         this.databaseService
           .createTable(result.databaseName, result.tableName)
-          .subscribe((createTableResponse) => {
-            if (
-              createTableResponse.status === 'error' &&
-              'message' in createTableResponse
-            ) {
-              console.error(createTableResponse);
-              return;
-            }
-
-            this.databaseService
-              .getTables(result.databaseName)
-              .subscribe((response) => {
-                this.tables = response.data;
-              });
-          });
+          .subscribe();
       }
     });
   }
@@ -80,23 +82,7 @@ export class DatabaseTablesComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.databaseService
-          .deleteTable(databaseName, table)
-          .subscribe((deleteTableResponse) => {
-            if (
-              deleteTableResponse.status === 'error' &&
-              'message' in deleteTableResponse
-            ) {
-              console.error(deleteTableResponse);
-              return;
-            }
-
-            this.databaseService
-              .getTables(databaseName)
-              .subscribe((response) => {
-                this.tables = response.data;
-              });
-          });
+        this.databaseService.deleteTable(databaseName, table).subscribe();
       }
     });
   }

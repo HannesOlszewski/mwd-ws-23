@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Column, DatabaseService, Row } from '../database.service';
+import { ApiEvent, Column, DatabaseService, Row } from '../database.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DatabaseTableRowDeleteDialogComponent } from '../database-table-row-delete-dialog/database-table-row-delete-dialog.component';
 import { DatabaseTableRowNewDialogComponent } from '../database-table-row-new-dialog/database-table-row-new-dialog.component';
@@ -52,6 +52,38 @@ export class DatabaseTableRowsComponent implements OnInit {
       .subscribe((response) => {
         this.rows = response.data;
       });
+
+    this.databaseService.getApiEvents().subscribe(({ data }) => {
+      const parsedData: ApiEvent = JSON.parse(data);
+
+      if (
+        parsedData.type === 'add-row' &&
+        parsedData.database === this.databaseName &&
+        parsedData.table === this.tableName
+      ) {
+        this.rows = [...this.rows, parsedData.row];
+      } else if (
+        parsedData.type === 'update-row' &&
+        parsedData.database === this.databaseName &&
+        parsedData.table === this.tableName
+      ) {
+        this.rows = this.rows.map((row) => {
+          if (row['id'] === parsedData.row['id']) {
+            return parsedData.row;
+          }
+
+          return row;
+        });
+      } else if (
+        parsedData.type === 'delete-row' &&
+        parsedData.database === this.databaseName &&
+        parsedData.table === this.tableName
+      ) {
+        this.rows = this.rows.filter(
+          (row) => row['id'] !== parsedData.row['id'],
+        );
+      }
+    });
   }
 
   openNewRowDialog() {
@@ -76,21 +108,7 @@ export class DatabaseTableRowsComponent implements OnInit {
       if (result) {
         this.databaseService
           .createRow(databaseName, tableName, result)
-          .subscribe((createRowResponse) => {
-            if (
-              createRowResponse.status === 'error' &&
-              'message' in createRowResponse
-            ) {
-              console.error(createRowResponse);
-              return;
-            }
-
-            this.databaseService
-              .getRows(databaseName, tableName)
-              .subscribe((response) => {
-                this.rows = response.data;
-              });
-          });
+          .subscribe();
       }
     });
   }
@@ -118,21 +136,7 @@ export class DatabaseTableRowsComponent implements OnInit {
       if (result) {
         this.databaseService
           .updateRow(databaseName, tableName, result.row)
-          .subscribe((updateRowResponse) => {
-            if (
-              updateRowResponse.status === 'error' &&
-              'message' in updateRowResponse
-            ) {
-              console.error(updateRowResponse);
-              return;
-            }
-
-            this.databaseService
-              .getRows(databaseName, tableName)
-              .subscribe((response) => {
-                this.rows = response.data;
-              });
-          });
+          .subscribe();
       }
     });
   }
@@ -158,21 +162,7 @@ export class DatabaseTableRowsComponent implements OnInit {
       if (result) {
         this.databaseService
           .deleteRow(databaseName, tableName, row)
-          .subscribe((deleteRowResponse) => {
-            if (
-              deleteRowResponse.status === 'error' &&
-              'message' in deleteRowResponse
-            ) {
-              console.error(deleteRowResponse);
-              return;
-            }
-
-            this.databaseService
-              .getRows(databaseName, tableName)
-              .subscribe((response) => {
-                this.rows = response.data;
-              });
-          });
+          .subscribe();
       }
     });
   }
