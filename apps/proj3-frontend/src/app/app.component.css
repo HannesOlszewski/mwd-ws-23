@@ -2,8 +2,30 @@
   height: 100%;
 }
 
+.sidenav-main-content {
+  padding: 20px;
+  width: 70%;
+  height: 100%;
+}
+
+.sidenav-side-content {
+  padding: 20px;
+  width: 30%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: #00305d 0px 0px 5px;
+}
+
 .sidenav-content {
   padding: 20px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
 }
 
 .sidenav {

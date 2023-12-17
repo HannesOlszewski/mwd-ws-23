@@ -19,8 +19,13 @@
   </mat-drawer>
   <mat-drawer-content>
     <div class="sidenav-content">
-      <app-breadcrumbs></app-breadcrumbs>
-      <router-outlet></router-outlet>
+      <div class="sidenav-main-content">
+        <app-breadcrumbs></app-breadcrumbs>
+        <router-outlet></router-outlet>
+      </div>
+      <div class="sidenav-side-content">
+        <app-api-event-log></app-api-event-log>
+      </div>
     </div>
   </mat-drawer-content>
 </mat-drawer-container>
