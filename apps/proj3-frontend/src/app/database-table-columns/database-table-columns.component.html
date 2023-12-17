@@ -52,6 +52,7 @@
         color="warn"
         (click)="openDeleteColumnDialog(element.name)"
         aria-label="Delete column"
+        [disabled]="element.primaryKey"
       >
         <mat-icon>delete</mat-icon>
       </button>
