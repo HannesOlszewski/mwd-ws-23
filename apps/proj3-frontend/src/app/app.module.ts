@@ -21,6 +21,7 @@ import { DatabaseTableColumnsComponent } from './database-table-columns/database
 import { DatabaseTableRowsComponent } from './database-table-rows/database-table-rows.component';
 import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import { DatabaseTableNewDialogComponent } from './database-table-new-dialog/database-table-new-dialog.component';
+import { DatabaseTableDeleteDialogComponent } from './database-table-delete-dialog/database-table-delete-dialog.component';
 
 @NgModule({
   imports: [
@@ -47,6 +48,7 @@ import { DatabaseTableNewDialogComponent } from './database-table-new-dialog/dat
     DatabaseTableRowsComponent,
     BreadcrumbsComponent,
     DatabaseTableNewDialogComponent,
+    DatabaseTableDeleteDialogComponent,
   ],
   bootstrap: [AppComponent],
 })

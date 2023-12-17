@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { DatabaseService, Table } from '../database.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DatabaseTableNewDialogComponent } from '../database-table-new-dialog/database-table-new-dialog.component';
+import { DatabaseTableDeleteDialogComponent } from '../database-table-delete-dialog/database-table-delete-dialog.component';
 
 @Component({
   selector: 'app-database-tables',
@@ -11,7 +12,12 @@ import { DatabaseTableNewDialogComponent } from '../database-table-new-dialog/da
 export class DatabaseTablesComponent {
   databaseName?: string;
   tables: Table[] = [];
-  displayedTableColumns: string[] = ['name', 'numColumns', 'numRows'];
+  displayedTableColumns: string[] = [
+    'name',
+    'numColumns',
+    'numRows',
+    'actions',
+  ];
 
   constructor(
     private databaseService: DatabaseService,
@@ -49,6 +55,44 @@ export class DatabaseTablesComponent {
 
             this.databaseService
               .getTables(result.databaseName)
+              .subscribe((response) => {
+                this.tables = response.data;
+              });
+          });
+      }
+    });
+  }
+
+  openDeleteTableDialog(table: string) {
+    if (!this.databaseName) {
+      return;
+    }
+
+    const databaseName = this.databaseName;
+
+    const dialogRef = this.dialog.open(DatabaseTableDeleteDialogComponent, {
+      data: {
+        databaseName,
+        tableName: table,
+      },
+      minWidth: '400px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.databaseService
+          .deleteTable(databaseName, table)
+          .subscribe((deleteTableResponse) => {
+            if (
+              deleteTableResponse.status === 'error' &&
+              'message' in deleteTableResponse
+            ) {
+              console.error(deleteTableResponse);
+              return;
+            }
+
+            this.databaseService
+              .getTables(databaseName)
               .subscribe((response) => {
                 this.tables = response.data;
               });

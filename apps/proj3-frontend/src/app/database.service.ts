@@ -82,6 +82,20 @@ export class DatabaseService {
     );
   }
 
+  deleteTable(
+    database: string,
+    table: string,
+  ): Observable<EmptyMutationResponse> {
+    return this.http.delete<EmptyMutationResponse>(
+      `${baseUrl}/databases/${database}/schemas/default/tables`,
+      {
+        body: {
+          name: table,
+        },
+      },
+    );
+  }
+
   getColumns(database: string, table: string): Observable<ColumnsResponse> {
     return this.http.get<ColumnsResponse>(
       `${baseUrl}/databases/${database}/schemas/default/tables/${table}/columns`,
