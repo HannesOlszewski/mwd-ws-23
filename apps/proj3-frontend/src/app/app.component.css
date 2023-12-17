@@ -3,12 +3,17 @@
 }
 
 .sidenav-content {
-  display: flex;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
+  padding: 20px;
 }
 
 .sidenav {
-  padding: 20px;
+  background-color: #fff;
+  color: #00305d;
+}
+
+.logo-text {
+  text-decoration: none;
+  background-color: #00305d;
+  color: #fff;
+  padding: 21px;
 }

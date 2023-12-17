@@ -1,7 +1,7 @@
 <mat-drawer-container class="sidenav-container">
   <mat-drawer mode="side" class="sidenav" opened>
     <h1>
-      <a routerLink="/">FHKielMyAdmin</a>
+      <a routerLink="/" class="logo-text">FHKielMyAdmin</a>
     </h1>
     <mat-nav-list>
       @for (database of databases; track database) {
@@ -9,7 +9,9 @@
       }
     </mat-nav-list>
   </mat-drawer>
-  <mat-drawer-content class="sidenav-content">
-    <router-outlet></router-outlet>
+  <mat-drawer-content>
+    <div class="sidenav-content">
+      <router-outlet></router-outlet>
+    </div>
   </mat-drawer-content>
 </mat-drawer-container>
