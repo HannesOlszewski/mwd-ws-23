@@ -41,6 +41,8 @@ export class ApiController {
     this.databaseFactory = new DatabaseFactory("sqlite");
     this.databaseConnections = [];
     this.eventListeners = {
+      "add-database": [],
+      "delete-database": [],
       "add-table": [],
       "delete-table": [],
       "add-column": [],
@@ -73,7 +75,7 @@ export class ApiController {
       return activeDatabaseConnection;
     }
 
-    const database = await this.databaseFactory.createDatabase({
+    const database = await this.databaseFactory.getDatabase({
       database: options.database,
     });
     const newDatabaseConnection = {
@@ -85,6 +87,35 @@ export class ApiController {
     this.databaseConnections.push(newDatabaseConnection);
 
     return newDatabaseConnection;
+  }
+
+  /**
+   * Creates a database using the specified options.
+   *
+   * @param options - The options for creating the database.
+   * @returns A promise that resolves when the database is created.
+   */
+  async createDatabase(options: DatabaseOptions): Promise<void> {
+    await this.databaseFactory.createDatabase(options);
+
+    this.emit("add-database", {
+      type: "add-database",
+      database: options.database,
+    });
+  }
+
+  /**
+   * Deletes a database using the specified options.
+   * @param options - The options for deleting the database.
+   * @returns A Promise that resolves when the database is successfully deleted.
+   */
+  async deleteDatabase(options: DatabaseOptions): Promise<void> {
+    await this.databaseFactory.deleteDatabase(options);
+
+    this.emit("delete-database", {
+      type: "delete-database",
+      database: options.database,
+    });
   }
 
   /**

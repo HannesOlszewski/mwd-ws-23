@@ -10,6 +10,8 @@ import type {
   UpdateRowEvent,
   DeleteRowEvent,
   AddRowEvent,
+  AddDatabaseEvent,
+  DeleteDatabaseEvent,
 } from "types";
 import { routes } from "types";
 import { v4 as uuidv4 } from "uuid";
@@ -45,6 +47,34 @@ app.get(routes.databases, (req, res) => {
     .catch((error) => {
       logger.error(`Error getting available databases: ${error}`);
       res.status(500).send(errorMessage("Error getting available databases"));
+    });
+});
+
+app.post(routes.databases, (req, res) => {
+  const { name } = parseRequestData<{ name: string }>(req);
+
+  apiController
+    .createDatabase({ database: name })
+    .then(() => {
+      res.send(successMessage());
+    })
+    .catch((error) => {
+      logger.error(`Error creating database: ${error}`);
+      res.status(500).send(errorMessage("Error creating database"));
+    });
+});
+
+app.delete(routes.databases, (req, res) => {
+  const { name } = parseRequestData<{ name: string }>(req);
+
+  apiController
+    .deleteDatabase({ database: name })
+    .then(() => {
+      res.send(successMessage());
+    })
+    .catch((error) => {
+      logger.error(`Error deleting database: ${error}`);
+      res.status(500).send(errorMessage("Error deleting database"));
     });
 });
 
@@ -321,6 +351,40 @@ wss.on("connection", (ws: WebSocket) => {
     logger.log("Client disconnected");
     webSocketConnections.delete(id);
   });
+});
+
+apiController.on<AddDatabaseEvent>("add-database", (data) => {
+  if (!data) {
+    return;
+  }
+
+  const { database } = data;
+
+  logger.debug(
+    `Sending add-database event to ${webSocketConnections.size} clients`
+  );
+
+  broadcast<AddDatabaseEvent>(
+    { type: "add-database", database },
+    Array.from(webSocketConnections.values())
+  );
+});
+
+apiController.on<DeleteDatabaseEvent>("delete-database", (data) => {
+  if (!data) {
+    return;
+  }
+
+  const { database } = data;
+
+  logger.debug(
+    `Sending delete-database event to ${webSocketConnections.size} clients`
+  );
+
+  broadcast<DeleteDatabaseEvent>(
+    { type: "delete-database", database },
+    Array.from(webSocketConnections.values())
+  );
 });
 
 apiController.on<AddTableEvent>("add-table", (data) => {

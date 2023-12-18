@@ -7,7 +7,7 @@ describe("DatabaseFactory", () => {
       const factory = new DatabaseFactory("sqlite");
       const options = { database: "test-db" };
 
-      const database = await factory.createDatabase(options);
+      const database = await factory.getDatabase(options);
 
       expect(database).toBeInstanceOf(SqliteDatabase);
     });
@@ -16,7 +16,7 @@ describe("DatabaseFactory", () => {
       const factory = new DatabaseFactory("unknown" as unknown as "sqlite");
       const options = { database: "test-db" };
 
-      await expect(factory.createDatabase(options)).rejects.toThrow(
+      await expect(factory.getDatabase(options)).rejects.toThrow(
         "Unknown database type"
       );
     });

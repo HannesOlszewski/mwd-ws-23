@@ -43,6 +43,25 @@ export class SqliteDatabase implements Database {
     this.logger = new Logger("sqlite");
   }
 
+  /**
+   * Deletes the SQLite database file.
+   * @param options - The database options.
+   * @returns A promise that resolves when the database file is deleted.
+   */
+  static async deleteDatabase(options: DatabaseOptions): Promise<void> {
+    const dbName: string = options.database;
+
+    if (!fs.existsSync(DATABASE_DIRECTORY)) {
+      return;
+    }
+
+    await fs.promises.rm(`${DATABASE_DIRECTORY}/${dbName}.db`);
+  }
+
+  /**
+   * Retrieves the list of available databases.
+   * @returns A promise that resolves to an array of strings representing the available databases.
+   */
   static async getAvailableDatabases(): Promise<string[]> {
     if (!fs.existsSync(DATABASE_DIRECTORY)) {
       return [];
