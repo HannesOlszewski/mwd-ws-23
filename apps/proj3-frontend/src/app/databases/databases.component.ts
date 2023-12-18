@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { DatabaseService } from '../database.service';
 
 @Component({
   selector: 'app-databases',
@@ -8,4 +9,19 @@ import { Component } from '@angular/core';
 /**
  * Represents the DatabasesComponent class.
  */
-export class DatabasesComponent {}
+export class DatabasesComponent implements OnInit {
+  databases: string[] = [];
+  displayedTableColumns: string[] = ['name'];
+
+  constructor(private databaseService: DatabaseService) {}
+
+  ngOnInit(): void {
+    this.databaseService.getDatabases().subscribe((response) => {
+      if (response.status !== 'ok') {
+        return;
+      }
+
+      this.databases = response.data;
+    });
+  }
+}

@@ -1,3 +1,13 @@
-<div class="container">
-  <p>Select a database from the left to get started!</p>
-</div>
+<h2 class="page-title">Databases</h2>
+
+<table mat-table [dataSource]="databases" class="mat-elevation-z8">
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let element">
+      <a [routerLink]="['/databases', element]">{{ element }}</a>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedTableColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedTableColumns"></tr>
+</table>
