@@ -5,4 +5,5 @@ export const routes = {
   columns:
     "/databases/:databaseName/schemas/:schemaName/tables/:tableName/columns",
   rows: "/databases/:databaseName/schemas/:schemaName/tables/:tableName/rows",
+  apiEvents: "/ws",
 } as const;
