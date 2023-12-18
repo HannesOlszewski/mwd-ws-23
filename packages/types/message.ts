@@ -50,6 +50,8 @@ export type ResponseMessage<T = unknown> = OkResponse<T> | ErrorResponse;
  * - "delete-row"
  */
 export type EventName =
+  | "add-database"
+  | "delete-database"
   | "add-table"
   | "delete-table"
   | "add-column"
@@ -70,6 +72,32 @@ export interface ApiEvent {
    * The database that the event is for.
    */
   database: string;
+  /**
+   * The table that the event is for.
+   */
+  table?: string;
+  /**
+   * The column that the event is for.
+   */
+  column?: Column | string;
+  /**
+   * The row that the event is for.
+   */
+  row?: Record<string, unknown>;
+}
+
+/**
+ * Represents an event for when a database was added.
+ */
+export interface AddDatabaseEvent extends ApiEvent {
+  type: "add-database";
+}
+
+/**
+ * Represents an event for when a database was deleted.
+ */
+export interface DeleteDatabaseEvent extends ApiEvent {
+  type: "delete-database";
 }
 
 /**
