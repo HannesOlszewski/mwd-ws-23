@@ -247,7 +247,7 @@ export class SqliteDatabase implements Database {
     orderBy?: Record<string, "ASC" | "DESC">,
     limit?: number,
     offset?: number
-  ): Promise<unknown[]> {
+  ): Promise<Row[]> {
     if (!this.db) {
       this.logger.error("No connection to SQLite database");
       throw new Error("No connection to SQLite database");
@@ -274,7 +274,8 @@ export class SqliteDatabase implements Database {
     }
 
     this.logger.debug(query);
-    return this.db.all<unknown[]>(query);
+
+    return this.db.all<Row[]>(query);
   }
 
   async addRow(table: string, row: Row): Promise<number> {
