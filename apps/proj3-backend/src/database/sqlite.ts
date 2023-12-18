@@ -7,6 +7,7 @@ import type {
   ColumnType,
   Database,
   DatabaseOptions,
+  Row,
   Table,
 } from "types";
 import { Logger } from "../utils/logger";
@@ -257,14 +258,14 @@ export class SqliteDatabase implements Database {
     return this.db.all<unknown[]>(query);
   }
 
-  async addRow(table: string, row: Record<string, unknown>): Promise<number> {
+  async addRow(table: string, row: Row): Promise<number> {
     if (!this.db) {
       this.logger.error("No connection to SQLite database");
       throw new Error("No connection to SQLite database");
     }
 
-    const columns = Object.keys(row).join(", ");
-    const values = Object.values(row)
+    const columns = Object.keys(row as Record<string, unknown>).join(", ");
+    const values = Object.values(row as Record<string, unknown>)
       .map((value) => `"${String(value)}"`)
       .join(", ");
     const query = `INSERT INTO ${table} (${columns}) VALUES (${values})`;
@@ -280,17 +281,13 @@ export class SqliteDatabase implements Database {
     return result.lastID;
   }
 
-  async updateRow(
-    table: string,
-    row: Record<string, unknown>,
-    where?: string
-  ): Promise<void> {
+  async updateRow(table: string, row: Row, where?: string): Promise<void> {
     if (!this.db) {
       this.logger.error("No connection to SQLite database");
       throw new Error("No connection to SQLite database");
     }
 
-    const columns = Object.entries(row)
+    const columns = Object.entries(row as Record<string, unknown>)
       .map(([column, value]) => `${column} = "${String(value)}"`)
       .join(", ");
     let query = `UPDATE ${table} SET ${columns}`;

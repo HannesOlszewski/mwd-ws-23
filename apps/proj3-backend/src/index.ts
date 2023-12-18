@@ -9,8 +9,9 @@ import type {
   DeleteTableEvent,
   UpdateRowEvent,
   DeleteRowEvent,
+  AddRowEvent,
 } from "types";
-import { AddRowEvent, routes } from "types";
+import { routes } from "types";
 import { v4 as uuidv4 } from "uuid";
 import type WebSocket from "ws";
 import { WebSocketServer } from "ws";
@@ -306,7 +307,7 @@ server.on("SIGTERM", () => {
   });
 });
 
-const wss = new WebSocketServer({ server, path: "/ws" });
+const wss = new WebSocketServer({ server, path: routes.apiEvents });
 
 const webSocketConnections = new Map<string, WebSocket>();
 
