@@ -1,9 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { ApiEvent, Column, DatabaseService, Row } from '../database.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DatabaseTableRowDeleteDialogComponent } from '../database-table-row-delete-dialog/database-table-row-delete-dialog.component';
 import { DatabaseTableRowNewDialogComponent } from '../database-table-row-new-dialog/database-table-row-new-dialog.component';
 import { DatabaseTableRowEditDialogComponent } from '../database-table-row-edit-dialog/database-table-row-edit-dialog.component';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-database-table-rows',
@@ -13,12 +16,15 @@ import { DatabaseTableRowEditDialogComponent } from '../database-table-row-edit-
 /**
  * Represents a component that displays the rows of a database table.
  */
-export class DatabaseTableRowsComponent implements OnInit {
+export class DatabaseTableRowsComponent implements AfterViewInit {
   databaseName?: string;
   tableName?: string;
   columns: Column[] = [];
+  dataSource = new MatTableDataSource<Row>([]);
   displayedTableColumns: string[] = [];
-  rows: Row[] = [];
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private databaseService: DatabaseService,
@@ -35,10 +41,17 @@ export class DatabaseTableRowsComponent implements OnInit {
     this.tableName = table;
   }
 
-  ngOnInit(): void {
+  private setRows(rows: Row[]) {
+    this.dataSource.data = rows;
+  }
+
+  ngAfterViewInit(): void {
     if (!this.databaseName || !this.tableName) {
-      return;
+      throw new Error('Database name or table name not provided.');
     }
+
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
 
     this.databaseService
       .getColumns(this.databaseName, this.tableName)
@@ -46,7 +59,7 @@ export class DatabaseTableRowsComponent implements OnInit {
         if (response.status !== 'ok') {
           return;
         }
-        
+
         this.columns = response.data;
         this.displayedTableColumns = [
           ...this.columns.map((column) => column.name),
@@ -61,7 +74,7 @@ export class DatabaseTableRowsComponent implements OnInit {
           return;
         }
 
-        this.rows = response.data;
+        this.setRows(response.data);
       });
 
     this.databaseService.getApiEvents().subscribe(({ data }) => {
@@ -72,26 +85,30 @@ export class DatabaseTableRowsComponent implements OnInit {
         parsedData.database === this.databaseName &&
         parsedData.table === this.tableName
       ) {
-        this.rows = [...this.rows, parsedData.row];
+        this.setRows([...this.dataSource.data, parsedData.row]);
       } else if (
         parsedData.type === 'update-row' &&
         parsedData.database === this.databaseName &&
         parsedData.table === this.tableName
       ) {
-        this.rows = this.rows.map((row) => {
-          if (row['id'] === parsedData.row['id']) {
-            return parsedData.row;
-          }
+        this.setRows(
+          this.dataSource.data.map((row) => {
+            if (row['id'] === parsedData.row['id']) {
+              return parsedData.row;
+            }
 
-          return row;
-        });
+            return row;
+          }),
+        );
       } else if (
         parsedData.type === 'delete-row' &&
         parsedData.database === this.databaseName &&
         parsedData.table === this.tableName
       ) {
-        this.rows = this.rows.filter(
-          (row) => row['id'] !== parsedData.row['id'],
+        this.setRows(
+          this.dataSource.data.filter((row) => {
+            return row['id'] !== parsedData.row['id'];
+          }),
         );
       }
     });

@@ -1,13 +1,19 @@
-<h2 class="page-title">Databases</h2>
+<h2 class="page-title">Home</h2>
 
-<table mat-table [dataSource]="databases" class="mat-elevation-z8">
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let element">
-      <a [routerLink]="['/databases', element]">{{ element }}</a>
-    </td>
-  </ng-container>
+<h3>Databases</h3>
 
-  <tr mat-header-row *matHeaderRowDef="displayedTableColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedTableColumns"></tr>
-</table>
+<div class="mat-elevation-z2">
+  <table mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+      <td mat-cell *matCellDef="let element">
+        <a [routerLink]="['/databases', element]">{{ element }}</a>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedTableColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedTableColumns"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+</div>

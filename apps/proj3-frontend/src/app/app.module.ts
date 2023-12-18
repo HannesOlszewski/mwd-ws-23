@@ -14,6 +14,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
@@ -50,6 +52,8 @@ import { ApiEventLogComponent } from './api-event-log/api-event-log.component';
     MatOptionModule,
     MatSelectModule,
     MatSlideToggleModule,
+    MatPaginatorModule,
+    MatSortModule,
   ],
   declarations: [
     AppComponent,

@@ -1,8 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { ApiEvent, Column, DatabaseService } from '../database.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DatabaseTableColumnNewDialogComponent } from '../database-table-column-new-dialog/database-table-column-new-dialog.component';
 import { DatabaseTableColumnDeleteDialogComponent } from '../database-table-column-delete-dialog/database-table-column-delete-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-database-table-columns',
@@ -12,10 +15,10 @@ import { DatabaseTableColumnDeleteDialogComponent } from '../database-table-colu
 /**
  * Represents a component that displays the columns of a database table.
  */
-export class DatabaseTableColumnsComponent implements OnInit {
+export class DatabaseTableColumnsComponent implements AfterViewInit {
   databaseName?: string;
   tableName?: string;
-  columns: Column[] = [];
+  dataSource = new MatTableDataSource<Column>([]);
   displayedTableColumns: string[] = [
     'name',
     'type',
@@ -24,6 +27,9 @@ export class DatabaseTableColumnsComponent implements OnInit {
     'unique',
     'actions',
   ];
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private databaseService: DatabaseService,
@@ -40,10 +46,17 @@ export class DatabaseTableColumnsComponent implements OnInit {
     this.tableName = table;
   }
 
-  ngOnInit(): void {
+  private setColumns(columns: Column[]) {
+    this.dataSource.data = columns;
+  }
+
+  ngAfterViewInit(): void {
     if (!this.databaseName || !this.tableName) {
-      return;
+      throw new Error('Database name or table name not provided.');
     }
+
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
 
     this.databaseService
       .getColumns(this.databaseName, this.tableName)
@@ -52,17 +65,19 @@ export class DatabaseTableColumnsComponent implements OnInit {
           return;
         }
 
-        this.columns = response.data;
+        this.setColumns(response.data);
       });
 
     this.databaseService.getApiEvents().subscribe(({ data }) => {
       const parsedData: ApiEvent = JSON.parse(data);
 
       if (parsedData.type === 'add-column') {
-        this.columns = [...this.columns, parsedData.column];
+        this.setColumns([...this.dataSource.data, parsedData.column]);
       } else if (parsedData.type === 'delete-column') {
-        this.columns = this.columns.filter(
-          (column) => column.name !== parsedData.column,
+        this.setColumns(
+          this.dataSource.data.filter(
+            (column) => column.name !== parsedData.column,
+          ),
         );
       }
     });
