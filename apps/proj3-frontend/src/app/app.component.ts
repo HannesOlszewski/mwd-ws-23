@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DatabaseService } from './database.service';
+import { ApiEvent, DatabaseService } from './database.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -19,6 +19,10 @@ export class AppComponent implements OnInit {
     private router: Router,
   ) {}
 
+  setDatabases(databases: string[]) {
+    this.databases = databases;
+  }
+
   /**
    * Retrieves the list of databases from the database service.
    */
@@ -29,6 +33,22 @@ export class AppComponent implements OnInit {
       }
 
       this.databases = response.data;
+    });
+
+    this.databaseService.getApiEvents().subscribe(({ data }) => {
+      const parsedData: ApiEvent = JSON.parse(data);
+
+      if (parsedData.type === 'add-database') {
+        const databases = [...this.databases, parsedData.database];
+
+        this.setDatabases(databases);
+      } else if (parsedData.type === 'delete-database') {
+        const databases = this.databases.filter(
+          (database) => database !== parsedData.database,
+        );
+
+        this.setDatabases(databases);
+      }
     });
   }
 

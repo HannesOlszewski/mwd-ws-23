@@ -1,5 +1,10 @@
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
-import { ApiEvent, Column, DatabaseService } from '../database.service';
+import {
+  AddColumnEvent,
+  Column,
+  DatabaseService,
+  DeleteColumnEvent,
+} from '../database.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DatabaseTableColumnNewDialogComponent } from '../database-table-column-new-dialog/database-table-column-new-dialog.component';
 import { DatabaseTableColumnDeleteDialogComponent } from '../database-table-column-delete-dialog/database-table-column-delete-dialog.component';
@@ -69,7 +74,7 @@ export class DatabaseTableColumnsComponent implements AfterViewInit {
       });
 
     this.databaseService.getApiEvents().subscribe(({ data }) => {
-      const parsedData: ApiEvent = JSON.parse(data);
+      const parsedData: AddColumnEvent | DeleteColumnEvent = JSON.parse(data);
 
       if (parsedData.type === 'add-column') {
         this.setColumns([...this.dataSource.data, parsedData.column]);

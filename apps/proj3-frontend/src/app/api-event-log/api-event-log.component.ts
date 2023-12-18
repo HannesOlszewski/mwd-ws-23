@@ -18,4 +18,14 @@ export class ApiEventLogComponent {
       this.apiEvents = [parsedData, ...this.apiEvents];
     });
   }
+
+  getColumnName(event: ApiEvent): string {
+    if (event.type === 'add-column' || event.type === 'delete-column') {
+      return typeof event.column === 'string'
+        ? event.column
+        : event.column!.name;
+    }
+
+    return '';
+  }
 }

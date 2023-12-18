@@ -2,14 +2,22 @@
 <div>
   @for (apiEvent of apiEvents; track apiEvent) {
   <p>
-    @if (apiEvent.type === 'add-table') {
+    @if (apiEvent.type === 'add-database') {
+    <span class="api-event-log-add-database">
+      Database {{ apiEvent.database }} was added
+    </span>
+    } @if (apiEvent.type === 'delete-database') {
+    <span class="api-event-log-delete-database">
+      Database {{ apiEvent.database }} was deleted
+    </span>
+    } @if (apiEvent.type === 'add-table') {
     <span class="api-event-log-add-table">
       Table {{ apiEvent.table }} was added to database
       {{ apiEvent.database }}
     </span>
     } @if (apiEvent.type === 'add-column') {
     <span class="api-event-log-add-column">
-      Column {{ apiEvent.column.name }} was added to table
+      Column {{ getColumnName(apiEvent) }} was added to table
       {{ apiEvent.table }} in database {{ apiEvent.database }}
     </span>
     } @if (apiEvent.type === 'add-row') {

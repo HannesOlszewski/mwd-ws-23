@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>Create database</h1>
+<mat-dialog-content>
+  <form class="dialog-form">
+    <mat-form-field>
+      <mat-label>Database Name</mat-label>
+      <input
+        matInput
+        placeholder="e.g. mydb"
+        [(ngModel)]="databaseName"
+        name="databaseName"
+        required
+      />
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    mat-button
+    [mat-dialog-close]="getResult()"
+    [disabled]="!databaseName || databaseName.length === 0"
+    color="primary"
+    cdkFocusInitial
+  >
+    Create
+  </button>
+</mat-dialog-actions>

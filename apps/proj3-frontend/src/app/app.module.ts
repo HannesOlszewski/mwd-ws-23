@@ -33,6 +33,8 @@ import { DatabaseTableRowNewDialogComponent } from './database-table-row-new-dia
 import { DatabaseTableRowEditDialogComponent } from './database-table-row-edit-dialog/database-table-row-edit-dialog.component';
 import { DatabaseTableRowDeleteDialogComponent } from './database-table-row-delete-dialog/database-table-row-delete-dialog.component';
 import { ApiEventLogComponent } from './api-event-log/api-event-log.component';
+import { DatabaseNewDialogComponent } from './database-new-dialog/database-new-dialog.component';
+import { DatabaseDeleteDialogComponent } from './database-delete-dialog/database-delete-dialog.component';
 
 @NgModule({
   imports: [
@@ -59,6 +61,8 @@ import { ApiEventLogComponent } from './api-event-log/api-event-log.component';
     AppComponent,
     PageNotFoundComponent,
     DatabasesComponent,
+    DatabaseNewDialogComponent,
+    DatabaseDeleteDialogComponent,
     DatabaseTablesComponent,
     DatabaseTableColumnsComponent,
     DatabaseTableRowsComponent,

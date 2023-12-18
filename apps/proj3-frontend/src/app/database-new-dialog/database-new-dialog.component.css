@@ -1,0 +1,11 @@
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.dialog-form > * {
+  margin: 10px 0;
+}

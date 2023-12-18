@@ -1,5 +1,12 @@
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
-import { ApiEvent, Column, DatabaseService, Row } from '../database.service';
+import {
+  AddRowEvent,
+  Column,
+  DatabaseService,
+  DeleteRowEvent,
+  Row,
+  UpdateRowEvent,
+} from '../database.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DatabaseTableRowDeleteDialogComponent } from '../database-table-row-delete-dialog/database-table-row-delete-dialog.component';
 import { DatabaseTableRowNewDialogComponent } from '../database-table-row-new-dialog/database-table-row-new-dialog.component';
@@ -78,7 +85,8 @@ export class DatabaseTableRowsComponent implements AfterViewInit {
       });
 
     this.databaseService.getApiEvents().subscribe(({ data }) => {
-      const parsedData: ApiEvent = JSON.parse(data);
+      const parsedData: AddRowEvent | UpdateRowEvent | DeleteRowEvent =
+        JSON.parse(data);
 
       if (
         parsedData.type === 'add-row' &&

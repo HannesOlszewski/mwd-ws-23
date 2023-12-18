@@ -1,5 +1,10 @@
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
-import { ApiEvent, DatabaseService, Table } from '../database.service';
+import {
+  AddTableEvent,
+  DatabaseService,
+  DeleteTableEvent,
+  Table,
+} from '../database.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DatabaseTableNewDialogComponent } from '../database-table-new-dialog/database-table-new-dialog.component';
 import { DatabaseTableDeleteDialogComponent } from '../database-table-delete-dialog/database-table-delete-dialog.component';
@@ -36,8 +41,21 @@ export class DatabaseTablesComponent implements AfterViewInit {
   @Input()
   set database(database: string) {
     this.databaseName = database;
+  }
 
-    this.databaseService.getTables(database).subscribe((response) => {
+  private setTables(tables: Table[]) {
+    this.dataSource.data = tables;
+  }
+
+  ngAfterViewInit(): void {
+    if (!this.databaseName) {
+      throw new Error('Database name not set.');
+    }
+
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+
+    this.databaseService.getTables(this.databaseName).subscribe((response) => {
       if (response.status !== 'ok') {
         return;
       }
@@ -46,7 +64,7 @@ export class DatabaseTablesComponent implements AfterViewInit {
     });
 
     this.databaseService.getApiEvents().subscribe(({ data }) => {
-      const parsedData: ApiEvent = JSON.parse(data);
+      const parsedData: AddTableEvent | DeleteTableEvent = JSON.parse(data);
 
       if (parsedData.type === 'add-table') {
         const tables = [
@@ -63,15 +81,6 @@ export class DatabaseTablesComponent implements AfterViewInit {
         this.setTables(tables);
       }
     });
-  }
-
-  private setTables(tables: Table[]) {
-    this.dataSource.data = tables;
-  }
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   /**

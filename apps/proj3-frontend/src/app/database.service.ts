@@ -13,46 +13,7 @@ import { WebsocketService } from './websocket.service';
 const baseUrl = 'http://localhost:3000';
 
 export type * from 'types/database';
-
-/**
- * Represents an API event.
- */
-export type ApiEvent =
-  | {
-      type: 'add-table';
-      database: string;
-      table: string;
-    }
-  | {
-      type: 'delete-table';
-      database: string;
-      table: string;
-    }
-  | {
-      type: 'add-column';
-      database: string;
-      table: string;
-      column: Column;
-    }
-  | {
-      type: 'delete-column';
-      database: string;
-      table: string;
-      column: string;
-    }
-  | { type: 'add-row'; database: string; table: string; row: Row }
-  | {
-      type: 'update-row';
-      database: string;
-      table: string;
-      row: Row;
-    }
-  | {
-      type: 'delete-row';
-      database: string;
-      table: string;
-      row: Row;
-    };
+export type * from 'types/message';
 
 /**
  * Creates a URL based on the provided route, database, and table.
@@ -97,6 +58,30 @@ export class DatabaseService {
     return this.http.get<ResponseMessage<string[]>>(
       createUrl(routes.databases),
     );
+  }
+
+  /**
+   * Creates a database.
+   * @param database - The name of the database to be created.
+   * @returns An Observable that emits an EmptyMutationResponse when the database creation is successful.
+   */
+  createDatabase(database: string): Observable<ResponseMessage> {
+    return this.http.post<ResponseMessage>(createUrl(routes.databases), {
+      name: database,
+    });
+  }
+
+  /**
+   * Deletes a database.
+   * @param database - The name of the database to be deleted.
+   * @returns An Observable that emits an EmptyMutationResponse when the database deletion is successful.
+   */
+  deleteDatabase(database: string): Observable<ResponseMessage> {
+    return this.http.delete<ResponseMessage>(createUrl(routes.databases), {
+      body: {
+        name: database,
+      },
+    });
   }
 
   /**
