@@ -55,5 +55,11 @@ export class BreadcrumbsComponent implements OnInit {
         label: parts[2],
       });
     }
+
+    if (parts.length > 3) {
+      this.breadcrumbs.push({
+        label: parts[3],
+      });
+    }
   }
 }
