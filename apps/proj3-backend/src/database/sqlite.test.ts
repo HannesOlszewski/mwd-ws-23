@@ -36,7 +36,7 @@ describe("SqliteDatabase", () => {
     await database.connect(options);
 
     await expect(database.connect(options)).rejects.toThrow(
-      "Already connected to SQLite database"
+      "Already connected to SQLite database",
     );
   });
 
@@ -120,7 +120,7 @@ describe("SqliteDatabase", () => {
     const columns: Column[] = [];
 
     await expect(database.createTable("users", columns)).rejects.toThrow(
-      "Cannot create table with no columns"
+      "Cannot create table with no columns",
     );
   });
 
@@ -134,7 +134,7 @@ describe("SqliteDatabase", () => {
       { name: "age", type: "INTEGER", nullable: true },
     ];
     await expect(database.createTable("users", columns)).rejects.toThrow(
-      "Cannot create table without primary key"
+      "Cannot create table without primary key",
     );
   });
 

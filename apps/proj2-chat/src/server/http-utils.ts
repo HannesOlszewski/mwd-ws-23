@@ -7,7 +7,7 @@ import type http from "node:http";
  * @throws An error if the request method is not POST or the content type is not application/json.
  */
 export async function parseRequestDataAsJson<T extends object>(
-  req: http.IncomingMessage
+  req: http.IncomingMessage,
 ): Promise<T> {
   if (req.method !== "POST") {
     throw new Error("Invalid request method");

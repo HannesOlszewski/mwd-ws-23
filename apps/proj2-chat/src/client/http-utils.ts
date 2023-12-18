@@ -3,7 +3,7 @@ import type { LoginResponse } from "../shared/types";
 export async function login(
   baseUrl: string,
   username: string,
-  password: string
+  password: string,
 ): Promise<string> {
   const response = await fetch(`${baseUrl}/login`, {
     method: "POST",

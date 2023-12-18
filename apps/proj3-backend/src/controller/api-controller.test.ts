@@ -49,7 +49,7 @@ describe("ApiController", () => {
     const tables = await apiController.getTables(options);
 
     expect(tables).toEqual(
-      expect.arrayContaining([{ name: "users", numColumns: 1, numRows: 0 }])
+      expect.arrayContaining([{ name: "users", numColumns: 1, numRows: 0 }]),
     );
   });
 
@@ -63,7 +63,7 @@ describe("ApiController", () => {
     const tables = await apiController.getTables(options);
 
     expect(tables).toEqual(
-      expect.arrayContaining([{ name, numColumns: 1, numRows: 0 }])
+      expect.arrayContaining([{ name, numColumns: 1, numRows: 0 }]),
     );
   });
 
@@ -78,7 +78,7 @@ describe("ApiController", () => {
     const tables = await apiController.getTables(options);
 
     expect(tables).not.toEqual(
-      expect.arrayContaining([{ name, numColumns: 1, numRows: 0 }])
+      expect.arrayContaining([{ name, numColumns: 1, numRows: 0 }]),
     );
   });
 

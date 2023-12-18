@@ -245,7 +245,7 @@ app.get(routes.rows, (req, res) => {
       limit,
       offset,
       where,
-      orderBy
+      orderBy,
     )
     .then((rows) => {
       res.send(successMessage(rows));
@@ -361,12 +361,12 @@ apiController.on<AddDatabaseEvent>("add-database", (data) => {
   const { database } = data;
 
   logger.debug(
-    `Sending add-database event to ${webSocketConnections.size} clients`
+    `Sending add-database event to ${webSocketConnections.size} clients`,
   );
 
   broadcast<AddDatabaseEvent>(
     { type: "add-database", database },
-    Array.from(webSocketConnections.values())
+    Array.from(webSocketConnections.values()),
   );
 });
 
@@ -378,12 +378,12 @@ apiController.on<DeleteDatabaseEvent>("delete-database", (data) => {
   const { database } = data;
 
   logger.debug(
-    `Sending delete-database event to ${webSocketConnections.size} clients`
+    `Sending delete-database event to ${webSocketConnections.size} clients`,
   );
 
   broadcast<DeleteDatabaseEvent>(
     { type: "delete-database", database },
-    Array.from(webSocketConnections.values())
+    Array.from(webSocketConnections.values()),
   );
 });
 
@@ -395,12 +395,12 @@ apiController.on<AddTableEvent>("add-table", (data) => {
   const { database, table } = data;
 
   logger.debug(
-    `Sending add-table event to ${webSocketConnections.size} clients`
+    `Sending add-table event to ${webSocketConnections.size} clients`,
   );
 
   broadcast<AddTableEvent>(
     { type: "add-table", database, table },
-    Array.from(webSocketConnections.values())
+    Array.from(webSocketConnections.values()),
   );
 });
 
@@ -412,12 +412,12 @@ apiController.on<DeleteTableEvent>("delete-table", (data) => {
   const { database, table } = data;
 
   logger.debug(
-    `Sending delete-table event to ${webSocketConnections.size} clients`
+    `Sending delete-table event to ${webSocketConnections.size} clients`,
   );
 
   broadcast<DeleteTableEvent>(
     { type: "delete-table", database, table },
-    Array.from(webSocketConnections.values())
+    Array.from(webSocketConnections.values()),
   );
 });
 
@@ -427,14 +427,14 @@ apiController.on<AddColumnEvent>("add-column", (data) => {
   }
 
   logger.debug(
-    `Sending add-column event to ${webSocketConnections.size} clients`
+    `Sending add-column event to ${webSocketConnections.size} clients`,
   );
 
   const { database, table, column } = data;
 
   broadcast<AddColumnEvent>(
     { type: "add-column", database, table, column },
-    Array.from(webSocketConnections.values())
+    Array.from(webSocketConnections.values()),
   );
 });
 
@@ -444,14 +444,14 @@ apiController.on<DeleteColumnEvent>("delete-column", (data) => {
   }
 
   logger.debug(
-    `Sending delete-column event to ${webSocketConnections.size} clients`
+    `Sending delete-column event to ${webSocketConnections.size} clients`,
   );
 
   const { database, table, column } = data;
 
   broadcast<DeleteColumnEvent>(
     { type: "delete-column", database, table, column },
-    Array.from(webSocketConnections.values())
+    Array.from(webSocketConnections.values()),
   );
 });
 
@@ -466,7 +466,7 @@ apiController.on<AddRowEvent>("add-row", (data) => {
 
   broadcast<AddRowEvent>(
     { type: "add-row", database, table, row },
-    Array.from(webSocketConnections.values())
+    Array.from(webSocketConnections.values()),
   );
 });
 
@@ -476,14 +476,14 @@ apiController.on<UpdateRowEvent>("update-row", (data) => {
   }
 
   logger.debug(
-    `Sending update-row event to ${webSocketConnections.size} clients`
+    `Sending update-row event to ${webSocketConnections.size} clients`,
   );
 
   const { database, table, row } = data;
 
   broadcast<UpdateRowEvent>(
     { type: "update-row", database, table, row },
-    Array.from(webSocketConnections.values())
+    Array.from(webSocketConnections.values()),
   );
 });
 
@@ -493,13 +493,13 @@ apiController.on<DeleteRowEvent>("delete-row", (data) => {
   }
 
   logger.debug(
-    `Sending delete-row event to ${webSocketConnections.size} clients`
+    `Sending delete-row event to ${webSocketConnections.size} clients`,
   );
 
   const { database, table, row } = data;
 
   broadcast<DeleteRowEvent>(
     { type: "delete-row", database, table, row },
-    Array.from(webSocketConnections.values())
+    Array.from(webSocketConnections.values()),
   );
 });

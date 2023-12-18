@@ -3,7 +3,7 @@ import { DatabaseFactory } from "../src/database/factory";
 
 if (process.argv.length < 9) {
   console.error(
-    "Usage: ts-node create-column.ts <database name> <table name> <column name> <column type> <column nullable> <column primary key> <column unique>"
+    "Usage: ts-node create-column.ts <database name> <table name> <column name> <column type> <column nullable> <column primary key> <column unique>",
   );
   process.exit(1);
 }
@@ -23,7 +23,7 @@ async function createColumn(
   type: ColumnType,
   nullable: boolean,
   primaryKey: boolean,
-  unique: boolean
+  unique: boolean,
 ): Promise<void> {
   const factory = new DatabaseFactory("sqlite");
   const connection = await factory.createDatabase({ database });
@@ -44,11 +44,11 @@ createColumn(
   columnType,
   columnNullable,
   columnPrimaryKey,
-  columnUnique
+  columnUnique,
 )
   .then(() => {
     console.log(
-      `Created column ${columnName} in table ${tableName} in database ${databaseName}`
+      `Created column ${columnName} in table ${tableName} in database ${databaseName}`,
     );
   })
   .catch((error) => {

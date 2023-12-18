@@ -13,17 +13,17 @@ describe("Logger", () => {
 
     logger.log(message);
     expect(consoleLogSpy).toHaveBeenCalledWith(
-      expect.stringContaining("[TEST]")
+      expect.stringContaining("[TEST]"),
     );
 
     logger.log(message);
     expect(consoleLogSpy).toHaveBeenCalledWith(
-      expect.stringContaining("|LOG  |")
+      expect.stringContaining("|LOG  |"),
     );
 
     logger.log(message);
     expect(consoleLogSpy).toHaveBeenCalledWith(
-      expect.stringContaining(message)
+      expect.stringContaining(message),
     );
   });
 
@@ -33,17 +33,17 @@ describe("Logger", () => {
 
     logger.info(message);
     expect(consoleInfoSpy).toHaveBeenCalledWith(
-      expect.stringContaining("[TEST]")
+      expect.stringContaining("[TEST]"),
     );
 
     logger.info(message);
     expect(consoleInfoSpy).toHaveBeenCalledWith(
-      expect.stringContaining("|INFO |")
+      expect.stringContaining("|INFO |"),
     );
 
     logger.info(message);
     expect(consoleInfoSpy).toHaveBeenCalledWith(
-      expect.stringContaining(message)
+      expect.stringContaining(message),
     );
   });
 
@@ -53,17 +53,17 @@ describe("Logger", () => {
 
     logger.debug(message);
     expect(consoleDebugSpy).toHaveBeenCalledWith(
-      expect.stringContaining("[TEST]")
+      expect.stringContaining("[TEST]"),
     );
 
     logger.debug(message);
     expect(consoleDebugSpy).toHaveBeenCalledWith(
-      expect.stringContaining("|DEBUG|")
+      expect.stringContaining("|DEBUG|"),
     );
 
     logger.debug(message);
     expect(consoleDebugSpy).toHaveBeenCalledWith(
-      expect.stringContaining(message)
+      expect.stringContaining(message),
     );
   });
 
@@ -73,17 +73,17 @@ describe("Logger", () => {
 
     logger.error(message);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      expect.stringContaining("[TEST]")
+      expect.stringContaining("[TEST]"),
     );
 
     logger.error(message);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      expect.stringContaining("|ERROR|")
+      expect.stringContaining("|ERROR|"),
     );
 
     logger.error(message);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      expect.stringContaining(message)
+      expect.stringContaining(message),
     );
   });
 
@@ -93,17 +93,17 @@ describe("Logger", () => {
 
     logger.warn(message);
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining("[TEST]")
+      expect.stringContaining("[TEST]"),
     );
 
     logger.warn(message);
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining("|WARN |")
+      expect.stringContaining("|WARN |"),
     );
 
     logger.warn(message);
     expect(consoleWarnSpy).toHaveBeenCalledWith(
-      expect.stringContaining(message)
+      expect.stringContaining(message),
     );
   });
 });

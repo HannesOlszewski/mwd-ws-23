@@ -63,10 +63,10 @@ export class ApiController {
    * @returns A promise that resolves to the retrieved or created database connection.
    */
   private async getDatabaseConnection(
-    options: DatabaseOptions
+    options: DatabaseOptions,
   ): Promise<DatabaseConnection> {
     const activeDatabaseConnection = this.databaseConnections.find(
-      (connection) => connection.name === options.database
+      (connection) => connection.name === options.database,
     );
 
     if (activeDatabaseConnection) {
@@ -126,8 +126,8 @@ export class ApiController {
   async close(): Promise<void> {
     await Promise.all(
       this.databaseConnections.map((databaseConnection) =>
-        databaseConnection.database.closeConnection()
-      )
+        databaseConnection.database.closeConnection(),
+      ),
     );
   }
 
@@ -178,7 +178,7 @@ export class ApiController {
   async createTable(
     options: DatabaseOptions,
     name: string,
-    columns: Column[]
+    columns: Column[],
   ): Promise<void> {
     const databaseConnection = await this.getDatabaseConnection(options);
 
@@ -237,7 +237,7 @@ export class ApiController {
   async addColumn(
     options: DatabaseOptions,
     table: string,
-    column: Column
+    column: Column,
   ): Promise<void> {
     const databaseConnection = await this.getDatabaseConnection(options);
 
@@ -263,7 +263,7 @@ export class ApiController {
   async deleteColumn(
     options: DatabaseOptions,
     table: string,
-    column: string
+    column: string,
   ): Promise<void> {
     const databaseConnection = await this.getDatabaseConnection(options);
 
@@ -295,7 +295,7 @@ export class ApiController {
     limit?: number,
     offset?: number,
     where?: string,
-    orderBy?: Record<string, "ASC" | "DESC">
+    orderBy?: Record<string, "ASC" | "DESC">,
   ): Promise<unknown[]> {
     const databaseConnection = await this.getDatabaseConnection(options);
 
@@ -304,7 +304,7 @@ export class ApiController {
       where,
       orderBy,
       limit,
-      offset
+      offset,
     );
   }
 
@@ -320,7 +320,7 @@ export class ApiController {
   async addRow(
     options: DatabaseOptions,
     table: string,
-    row: Record<string, unknown>
+    row: Record<string, unknown>,
   ): Promise<void> {
     const databaseConnection = await this.getDatabaseConnection(options);
 
@@ -351,7 +351,7 @@ export class ApiController {
     options: DatabaseOptions,
     table: string,
     row: Record<string, unknown>,
-    where?: string
+    where?: string,
   ): Promise<void> {
     const databaseConnection = await this.getDatabaseConnection(options);
 
@@ -377,7 +377,7 @@ export class ApiController {
   async deleteRow(
     options: DatabaseOptions,
     table: string,
-    where?: string
+    where?: string,
   ): Promise<void> {
     const databaseConnection = await this.getDatabaseConnection(options);
 
@@ -401,7 +401,7 @@ export class ApiController {
    */
   on<T extends ApiEvent>(
     eventName: EventName,
-    listener: (data?: T) => void
+    listener: (data?: T) => void,
   ): void {
     this.eventListeners[eventName].push(listener as (data?: unknown) => void);
   }
@@ -414,10 +414,10 @@ export class ApiController {
    */
   off<T extends ApiEvent>(
     eventName: EventName,
-    listener: (data?: T) => void
+    listener: (data?: T) => void,
   ): void {
     this.eventListeners[eventName] = this.eventListeners[eventName].filter(
-      (eventListener) => eventListener !== listener
+      (eventListener) => eventListener !== listener,
     );
   }
 

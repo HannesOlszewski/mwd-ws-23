@@ -16,7 +16,7 @@ export class SqliteDatabase implements Database {
   public async initialize(): Promise<void> {
     this.db = await getDb();
     console.debug(
-      `[DATABASE] Database initialized at "${this.db.config.filename}"`
+      `[DATABASE] Database initialized at "${this.db.config.filename}"`,
     );
   }
 
@@ -44,7 +44,7 @@ export class SqliteDatabase implements Database {
   public async select(
     columns: string[],
     from: string,
-    where: string
+    where: string,
   ): Promise<unknown[]> {
     if (!this.db) {
       throw new Error("[DATABASE] Database not initialized");
@@ -65,12 +65,12 @@ export class SqliteDatabase implements Database {
     const columns = Object.keys(values);
     const placeholders = columns.map((column) => `$${column}`).join(", ");
     const sql = `INSERT INTO ${table} (${columns.join(
-      ", "
+      ", ",
     )}) VALUES (${placeholders})`;
     console.debug(`[DATABASE] ${sql}`);
     const result = await this.db.run(
       sql,
-      this.mapValuesWithPlaceholderPrefix(values)
+      this.mapValuesWithPlaceholderPrefix(values),
     );
 
     if (result.lastID === undefined) {
@@ -81,7 +81,7 @@ export class SqliteDatabase implements Database {
   }
 
   private mapValuesWithPlaceholderPrefix(
-    values: object
+    values: object,
   ): Record<string, unknown> {
     const mappedValues: Record<string, unknown> = {};
     Object.entries(values).forEach(([column, value]) => {
@@ -94,7 +94,7 @@ export class SqliteDatabase implements Database {
   public async update(
     table: string,
     values: object,
-    where: string
+    where: string,
   ): Promise<number> {
     if (!this.db) {
       throw new Error("[DATABASE] Database not initialized");
@@ -107,7 +107,7 @@ export class SqliteDatabase implements Database {
     console.debug(`[DATABASE] ${sql}`);
     const result = await this.db.run(
       sql,
-      this.mapValuesWithPlaceholderPrefix(values)
+      this.mapValuesWithPlaceholderPrefix(values),
     );
 
     if (result.changes === undefined) {

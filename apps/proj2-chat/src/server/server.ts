@@ -57,7 +57,7 @@ wss.on(
       chat.broadcast({ message: `${connection.username} left the chat` });
       chat.removeConnection(connection);
     });
-  }
+  },
 );
 
 server.on("upgrade", function upgrade(request, socket, head) {

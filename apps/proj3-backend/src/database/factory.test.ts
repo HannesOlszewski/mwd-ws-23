@@ -17,7 +17,7 @@ describe("DatabaseFactory", () => {
       const options = { database: "test-db" };
 
       await expect(factory.getDatabase(options)).rejects.toThrow(
-        "Unknown database type"
+        "Unknown database type",
       );
     });
   });
@@ -35,7 +35,7 @@ describe("DatabaseFactory", () => {
       const factory = new DatabaseFactory("unknown" as unknown as "sqlite");
 
       await expect(factory.getAvailableDatabases()).rejects.toThrow(
-        "Unknown database type"
+        "Unknown database type",
       );
     });
   });

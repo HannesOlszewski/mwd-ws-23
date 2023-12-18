@@ -8,7 +8,7 @@ import type WebSocket from "ws";
  */
 export function broadcast<T extends object>(
   message: string | T,
-  webSocketClients: WebSocket[]
+  webSocketClients: WebSocket[],
 ): void {
   let stringifyedMessage: string;
 

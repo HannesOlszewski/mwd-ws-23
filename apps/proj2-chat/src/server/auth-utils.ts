@@ -11,7 +11,7 @@ import { UserRepository } from "./user-utils";
  */
 export async function handleLogin(
   req: http.IncomingMessage,
-  res: http.ServerResponse
+  res: http.ServerResponse,
 ): Promise<void> {
   const data = await parseRequestDataAsJson<LoginData>(req);
 
@@ -37,7 +37,7 @@ export async function handleLogin(
  */
 export function authenticate(
   request: http.IncomingMessage,
-  callback: (err: Error | null, client?: string) => void
+  callback: (err: Error | null, client?: string) => void,
 ): void {
   if (!request.url) {
     callback(new Error("Missing token"));

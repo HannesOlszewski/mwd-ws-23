@@ -14,11 +14,11 @@ export class ReadlineService {
    */
   constructor(
     inputStream: NodeJS.ReadableStream = process.stdin,
-    outputStream: NodeJS.WritableStream = process.stdout
+    outputStream: NodeJS.WritableStream = process.stdout,
   ) {
     this.rl = this.createReadlineInterfaceWithMaskableOutput(
       inputStream,
-      outputStream
+      outputStream,
     );
   }
 
@@ -30,7 +30,7 @@ export class ReadlineService {
    */
   private createReadlineInterfaceWithMaskableOutput(
     inputStream: NodeJS.ReadableStream = process.stdin,
-    outputStream: NodeJS.WritableStream = process.stdout
+    outputStream: NodeJS.WritableStream = process.stdout,
   ): readline.Interface {
     const rl = readline.createInterface({
       input: inputStream,

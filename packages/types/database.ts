@@ -129,7 +129,7 @@ export interface Database {
     where?: string,
     orderBy?: Record<string, "ASC" | "DESC">,
     limit?: number,
-    offset?: number
+    offset?: number,
   ) => Promise<Row[]>;
 
   /**

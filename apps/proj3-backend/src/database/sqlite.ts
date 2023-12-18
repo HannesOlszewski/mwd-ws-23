@@ -138,10 +138,10 @@ export class SqliteDatabase implements Database {
         numRows:
           (
             await this.db?.get<{ "COUNT(*)": number }>(
-              `SELECT COUNT(*) FROM ${table.name}`
+              `SELECT COUNT(*) FROM ${table.name}`,
             )
           )?.["COUNT(*)"] ?? 0,
-      }))
+      })),
     );
   }
 
@@ -246,7 +246,7 @@ export class SqliteDatabase implements Database {
     where?: string,
     orderBy?: Record<string, "ASC" | "DESC">,
     limit?: number,
-    offset?: number
+    offset?: number,
   ): Promise<Row[]> {
     if (!this.db) {
       this.logger.error("No connection to SQLite database");
