@@ -140,7 +140,7 @@ export interface Database {
    *
    * @returns A promise that resolves with the new id when the row is added.
    */
-  addRow: (table: string, row: Record<string, unknown>) => Promise<number>;
+  addRow: (table: string, row: Row) => Promise<number>;
 
   /**
    * Updates a row in a table.
@@ -153,7 +153,7 @@ export interface Database {
    */
   updateRow: (
     table: string,
-    row: Record<string, unknown>,
+    row: Row,
     where?: string
   ) => Promise<void>;
 
@@ -216,3 +216,8 @@ export interface Column {
    */
   unique?: boolean;
 }
+
+/**
+ * Represents a row in the database.
+ */
+export type Row = Record<string, unknown>;
