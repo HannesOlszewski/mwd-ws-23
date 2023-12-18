@@ -1,30 +1,54 @@
 import { Column } from "./database";
 
 /**
+ * Represents a response object.
+ */
+interface Response {
+  /**
+   * The status of the response.
+   */
+  status: "ok" | "error";
+}
+
+/**
+ * Represents a successful response with data.
+ * @template T The type of the response data.
+ */
+interface OkResponse<T> extends Response {
+  status: "ok";
+  /**
+   * The data of the response.
+   */
+  data: T;
+}
+
+/**
+ * Represents an error response.
+ */
+interface ErrorResponse extends Response {
+  status: "error";
+  /**
+   * The message of the response.
+   */
+  message: string;
+}
+
+/**
  * Represents a response message.
  */
-export type ResponseMessage =
-  | {
-      /**
-       * The status of the response.
-       */
-      status: "ok";
-      /**
-       * The data of the response.
-       */
-      data: unknown;
-    }
-  | {
-      /**
-       * The status of the response.
-       */
-      status: "error";
-      /**
-       * The message of the response.
-       */
-      message: string;
-    };
+export type ResponseMessage<T = unknown> = OkResponse<T> | ErrorResponse;
 
+/**
+ * Represents the name of an event.
+ * Possible values include:
+ * - "add-table"
+ * - "delete-table"
+ * - "add-column"
+ * - "delete-column"
+ * - "add-row"
+ * - "update-row"
+ * - "delete-row"
+ */
 export type EventName =
   | "add-table"
   | "delete-table"
