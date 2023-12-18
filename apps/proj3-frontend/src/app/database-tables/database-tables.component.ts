@@ -32,6 +32,10 @@ export class DatabaseTablesComponent {
     this.databaseName = database;
 
     this.databaseService.getTables(database).subscribe((response) => {
+      if (response.status !== 'ok') {
+        return;
+      }
+
       this.tables = response.data;
     });
 

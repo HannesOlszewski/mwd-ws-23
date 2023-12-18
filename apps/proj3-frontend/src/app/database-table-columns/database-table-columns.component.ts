@@ -48,6 +48,10 @@ export class DatabaseTableColumnsComponent implements OnInit {
     this.databaseService
       .getColumns(this.databaseName, this.tableName)
       .subscribe((response) => {
+        if (response.status !== 'ok') {
+          return;
+        }
+
         this.columns = response.data;
       });
 
@@ -100,7 +104,7 @@ export class DatabaseTableColumnsComponent implements OnInit {
 
   /**
    * Opens a dialog to delete a column from the database table.
-   * 
+   *
    * @param column - The name of the column to be deleted.
    */
   openDeleteColumnDialog(column: string) {

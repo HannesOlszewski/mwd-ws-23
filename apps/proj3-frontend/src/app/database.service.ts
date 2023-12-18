@@ -1,128 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import {
+  routes,
+  type Column,
+  type ResponseMessage,
+  type Row,
+  type Table,
+} from 'types';
+import { Observable } from 'rxjs';
 import { WebsocketService } from './websocket.service';
 
 const baseUrl = 'http://localhost:3000';
 
-/**
- * Represents a table in the database.
- */
-export interface Table {
-  /**
-   * The name of the table.
-   */
-  name: string;
-  /**
-   * The number of columns in the table.
-   */
-  numColumns: number;
-  /**
-   * The number of rows in the table.
-   */
-  numRows: number;
-}
-
-/**
- * Represents a column in the database.
- */
-export interface Column {
-  /**
-   * The name of the column.
-   */
-  name: string;
-  /**
-   * The type of the column.
-   */
-  type: string;
-  /**
-   * Whether the column can be null.
-   */
-  nullable: boolean;
-  /**
-   * Whether the column is a primary key.
-   */
-  primaryKey: boolean;
-  /**
-   * Whether the column is unique.
-   */
-  unique: boolean;
-}
-
-/**
- * Represents a row in the database.
- */
-export type Row = Record<string, unknown>;
-
-/**
- * Represents the response from the server when retrieving databases.
- */
-interface DatabasesResponse {
-  /**
-   * The status of the response.
-   */
-  status: string;
-  /**
-   * The names of the databases.
-   */
-  data: string[];
-}
-
-/**
- * Represents the response object for tables.
- */
-interface TablesResponse {
-  /**
-   * The status of the response.
-   */
-  status: string;
-  /**
-   * The tables in the database.
-   */
-  data: Table[];
-}
-
-/**
- * Represents the response object for columns.
- */
-interface ColumnsResponse {
-  /**
-   * The status of the response.
-   */
-  status: string;
-  /**
-   * The columns in the table.
-   */
-  data: Column[];
-}
-
-/**
- * Represents the response object for rows.
- */
-interface RowsResponse {
-  /**
-   * The status of the response.
-   */
-  status: string;
-  /**
-   * The rows in the table.
-   */
-  data: Row[];
-}
-
-/**
- * Represents the response object for mutations.
- */
-interface EmptyMutationResponse {
-  /**
-   * The status of the response.
-   */
-  status: string;
-  /**
-   * The message of the response.
-   */
-  message?: string;
-}
+export type * from 'types/database';
 
 /**
  * Represents an API event.
@@ -164,6 +54,23 @@ export type ApiEvent =
       row: Row;
     };
 
+/**
+ * Creates a URL based on the provided route, database, and table.
+ *
+ * @param route - The route to be used in the URL.
+ * @param database - The optional database parameter to be replaced in the route.
+ * @param table - The optional table parameter to be replaced in the route.
+ * @returns The generated URL.
+ */
+function createUrl(route: string, database?: string, table?: string): string {
+  const routeWithFilledParameters = route
+    .replace(':databaseName', database ?? '')
+    .replace(':schemaName', 'default')
+    .replace(':tableName', table ?? '');
+
+  return `${baseUrl}${routeWithFilledParameters}`;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -178,7 +85,7 @@ export class DatabaseService {
     private ws: WebsocketService,
   ) {
     this.apiEvents = this.ws
-      .connect(`${baseUrl.replace('http', 'ws')}/ws`)
+      .connect(createUrl(routes.apiEvents).replace('http', 'ws'))
       .asObservable();
   }
 
@@ -186,8 +93,10 @@ export class DatabaseService {
    * Retrieves the list of databases.
    * @returns An Observable that emits a DatabasesResponse object.
    */
-  getDatabases(): Observable<DatabasesResponse> {
-    return this.http.get<DatabasesResponse>(`${baseUrl}/databases`);
+  getDatabases(): Observable<ResponseMessage<string[]>> {
+    return this.http.get<ResponseMessage<string[]>>(
+      createUrl(routes.databases),
+    );
   }
 
   /**
@@ -195,9 +104,9 @@ export class DatabaseService {
    * @param database - The name of the database.
    * @returns An Observable that emits a TablesResponse object.
    */
-  getTables(database: string): Observable<TablesResponse> {
-    return this.http.get<TablesResponse>(
-      `${baseUrl}/databases/${database}/schemas/default/tables`,
+  getTables(database: string): Observable<ResponseMessage<Table[]>> {
+    return this.http.get<ResponseMessage<Table[]>>(
+      createUrl(routes.tables, database),
     );
   }
 
@@ -208,25 +117,19 @@ export class DatabaseService {
    * @param table - The name of the table to be created.
    * @returns An Observable that emits an EmptyMutationResponse when the table creation is successful.
    */
-  createTable(
-    database: string,
-    table: string,
-  ): Observable<EmptyMutationResponse> {
-    return this.http.post<EmptyMutationResponse>(
-      `${baseUrl}/databases/${database}/schemas/default/tables`,
-      {
-        name: table,
-        columns: [
-          {
-            name: 'id',
-            type: 'INTEGER',
-            nullable: false,
-            primaryKey: true,
-            unique: true,
-          },
-        ],
-      },
-    );
+  createTable(database: string, table: string): Observable<ResponseMessage> {
+    return this.http.post<ResponseMessage>(createUrl(routes.tables, database), {
+      name: table,
+      columns: [
+        {
+          name: 'id',
+          type: 'INTEGER',
+          nullable: false,
+          primaryKey: true,
+          unique: true,
+        },
+      ],
+    });
   }
 
   /**
@@ -235,12 +138,9 @@ export class DatabaseService {
    * @param table The name of the table to delete.
    * @returns An Observable that emits an EmptyMutationResponse.
    */
-  deleteTable(
-    database: string,
-    table: string,
-  ): Observable<EmptyMutationResponse> {
-    return this.http.delete<EmptyMutationResponse>(
-      `${baseUrl}/databases/${database}/schemas/default/tables`,
+  deleteTable(database: string, table: string): Observable<ResponseMessage> {
+    return this.http.delete<ResponseMessage>(
+      createUrl(routes.tables, database),
       {
         body: {
           name: table,
@@ -255,9 +155,12 @@ export class DatabaseService {
    * @param table - The name of the table.
    * @returns An Observable that emits a ColumnsResponse object.
    */
-  getColumns(database: string, table: string): Observable<ColumnsResponse> {
-    return this.http.get<ColumnsResponse>(
-      `${baseUrl}/databases/${database}/schemas/default/tables/${table}/columns`,
+  getColumns(
+    database: string,
+    table: string,
+  ): Observable<ResponseMessage<Column[]>> {
+    return this.http.get<ResponseMessage<Column[]>>(
+      createUrl(routes.columns, database, table),
     );
   }
 
@@ -272,9 +175,9 @@ export class DatabaseService {
     database: string,
     table: string,
     column: Column,
-  ): Observable<EmptyMutationResponse> {
-    return this.http.post<EmptyMutationResponse>(
-      `${baseUrl}/databases/${database}/schemas/default/tables/${table}/columns`,
+  ): Observable<ResponseMessage> {
+    return this.http.post<ResponseMessage>(
+      createUrl(routes.columns, database, table),
       column,
     );
   }
@@ -290,9 +193,9 @@ export class DatabaseService {
     database: string,
     table: string,
     column: string,
-  ): Observable<EmptyMutationResponse> {
-    return this.http.delete<EmptyMutationResponse>(
-      `${baseUrl}/databases/${database}/schemas/default/tables/${table}/columns`,
+  ): Observable<ResponseMessage> {
+    return this.http.delete<ResponseMessage>(
+      createUrl(routes.columns, database, table),
       {
         body: {
           name: column,
@@ -307,9 +210,9 @@ export class DatabaseService {
    * @param table The name of the table.
    * @returns An Observable that emits a RowsResponse object containing the rows.
    */
-  getRows(database: string, table: string): Observable<RowsResponse> {
-    return this.http.get<RowsResponse>(
-      `${baseUrl}/databases/${database}/schemas/default/tables/${table}/rows`,
+  getRows(database: string, table: string): Observable<ResponseMessage<Row[]>> {
+    return this.http.get<ResponseMessage<Row[]>>(
+      createUrl(routes.rows, database, table),
     );
   }
 
@@ -324,9 +227,9 @@ export class DatabaseService {
     database: string,
     table: string,
     row: Row,
-  ): Observable<EmptyMutationResponse> {
-    return this.http.post<EmptyMutationResponse>(
-      `${baseUrl}/databases/${database}/schemas/default/tables/${table}/rows`,
+  ): Observable<ResponseMessage> {
+    return this.http.post<ResponseMessage>(
+      createUrl(routes.rows, database, table),
       row,
     );
   }
@@ -342,9 +245,9 @@ export class DatabaseService {
     database: string,
     table: string,
     row: Row,
-  ): Observable<EmptyMutationResponse> {
-    return this.http.put<EmptyMutationResponse>(
-      `${baseUrl}/databases/${database}/schemas/default/tables/${table}/rows`,
+  ): Observable<ResponseMessage> {
+    return this.http.put<ResponseMessage>(
+      createUrl(routes.rows, database, table),
       {
         row,
         where: `id=${row['id'] ?? -1}`,
@@ -364,9 +267,9 @@ export class DatabaseService {
     database: string,
     table: string,
     row: Row,
-  ): Observable<EmptyMutationResponse> {
-    return this.http.delete<EmptyMutationResponse>(
-      `${baseUrl}/databases/${database}/schemas/default/tables/${table}/rows`,
+  ): Observable<ResponseMessage> {
+    return this.http.delete<ResponseMessage>(
+      createUrl(routes.rows, database, table),
       {
         body: {
           where: Object.entries(row)

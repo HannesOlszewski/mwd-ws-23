@@ -43,6 +43,10 @@ export class DatabaseTableRowsComponent implements OnInit {
     this.databaseService
       .getColumns(this.databaseName, this.tableName)
       .subscribe((response) => {
+        if (response.status !== 'ok') {
+          return;
+        }
+        
         this.columns = response.data;
         this.displayedTableColumns = [
           ...this.columns.map((column) => column.name),
@@ -53,6 +57,10 @@ export class DatabaseTableRowsComponent implements OnInit {
     this.databaseService
       .getRows(this.databaseName, this.tableName)
       .subscribe((response) => {
+        if (response.status !== 'ok') {
+          return;
+        }
+
         this.rows = response.data;
       });
 

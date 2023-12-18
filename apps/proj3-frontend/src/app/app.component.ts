@@ -23,9 +23,13 @@ export class AppComponent implements OnInit {
    * Retrieves the list of databases from the database service.
    */
   getDatabases(): void {
-    this.databaseService
-      .getDatabases()
-      .subscribe((databases) => (this.databases = databases.data));
+    this.databaseService.getDatabases().subscribe((response) => {
+      if (response.status !== 'ok') {
+        return;
+      }
+
+      this.databases = response.data;
+    });
   }
 
   ngOnInit(): void {
