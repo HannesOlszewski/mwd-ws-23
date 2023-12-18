@@ -130,7 +130,7 @@ export interface Database {
     orderBy?: Record<string, "ASC" | "DESC">,
     limit?: number,
     offset?: number
-  ) => Promise<unknown[]>;
+  ) => Promise<Row[]>;
 
   /**
    * Adds a row to a table.
@@ -151,11 +151,7 @@ export interface Database {
    *
    * @returns A promise that resolves when the row is updated.
    */
-  updateRow: (
-    table: string,
-    row: Row,
-    where?: string
-  ) => Promise<void>;
+  updateRow: (table: string, row: Row, where?: string) => Promise<void>;
 
   /**
    * Deletes a row from a table.
